@@ -11,9 +11,9 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
+   [renderer.i18n.views :as i18n.views]
    [renderer.panel.subs :as-alias panel.subs]
    [renderer.utils.dom :as utils.dom]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -26,17 +26,17 @@
 
      [views/icon-button
       "file"
-      {:title (t [::new "New"])
+      {:title (i18n.views/t [::new "New"])
        :on-click #(rf/dispatch [::document.events/new])}]
 
      [views/icon-button
       "folder"
-      {:title (t [::open "Open"])
+      {:title (i18n.views/t [::open "Open"])
        :on-click #(rf/dispatch [::document.events/open])}]
 
      [views/icon-button
       "save"
-      {:title (t [::save "Save"])
+      {:title (i18n.views/t [::save "Save"])
        :on-click #(rf/dispatch [::document.events/save])
        :disabled @(rf/subscribe [::document.subs/active-saved?])}]
 
@@ -44,15 +44,17 @@
 
      [history.views/action-button
       {:icon "undo"
-       :title (t [::undo "Undo"])
+       :title [::undo "Undo"]
        :options undos
+       :options-label [::undo-stack "Undo stack"]
        :show-options md?
        :action [::history.events/undo]}]
 
      [history.views/action-button
       {:icon "redo"
-       :title (t [::redo "Redo"])
+       :title [::redo "Redo"]
        :options redos
+       :options-label [::redo-stack "Redo stack"]
        :show-options md?
        :action [::history.events/redo]}]]))
 
@@ -61,7 +63,7 @@
   [:button.button.button-size-small.invisible.relative.shrink-0.bg-inherit.group
    {:key id
     :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden rounded-xs"
-    :title (t [::close-doc "Close document"])
+    :title (i18n.views/t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::document.events/close id true]))}
@@ -78,18 +80,18 @@
         path (:path document)
         tabs @(rf/subscribe [::document.subs/tabs])
         desktop? @(rf/subscribe [::app.subs/desktop?])]
-    (cond-> [{:label (t [::close "Close"])
+    (cond-> [{:label [::close "Close"]
               :action [::document.events/close id true]}
-             {:label (t [::close-others "Close others"])
+             {:label [::close-others "Close others"]
               :action [::document.events/close-others id]
               :disabled (empty? (rest tabs))}
-             {:label (t [::close-all "Close all"])
+             {:label [::close-all "Close all"]
               :action [::document.events/close-all]}
-             {:label (t [::close-saved "Close saved"])
+             {:label [::close-saved "Close saved"]
               :action [::document.events/close-saved]}]
       desktop?
       (concat [{:type :separator}
-               {:label (t [::open-directory "Open containing directory"])
+               {:label [::open-directory "Open containing directory"]
                 :action [::document.events/open-directory path]
                 :disabled (nil? path)}]))))
 
@@ -152,7 +154,6 @@
 (defn documents-dropdown-button
   []
   (let [documents @(rf/subscribe [::document.subs/entities])
-        active-id @(rf/subscribe [::document.subs/active-id])
         md? @(rf/subscribe [::window.subs/md?])
         document-count (count documents)]
     [:> DropdownMenu/Root
@@ -167,10 +168,10 @@
                       "ellipsis-h"
                       "chevron-down")]]]]
      [:> DropdownMenu/Portal
-      (cond->> [{:label (t [::close-all "Close all"])
+      (cond->> [{:label [::close-all "Close all"]
                  :key :close-all
                  :action [::document.events/close-all]}
-                {:label (t [::close-saved "Close saved"])
+                {:label [::close-saved "Close saved"]
                  :key :close-saved
                  :action [::document.events/close-saved]}]
 
@@ -179,9 +180,10 @@
         (concat (mapv (fn [{:keys [id title]}]
                         {:key id
                          :type :checkbox
-                         :label title
+                         :label [(keyword id) title]
                          :action [::document.events/set-active id]
-                         :checked (= active-id id)}) documents)
+                         :checked [::document.subs/active? id]})
+                      documents)
                 [{:type :separator}])
 
         :always

@@ -7,7 +7,6 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :circle ::tool.hierarchy/element)
@@ -15,7 +14,7 @@
 (defmethod tool.hierarchy/properties :circle
   []
   {:icon "circle-tool"
-   :label (t [::label "Circle"])})
+   :label [::label "Circle"]})
 
 (defmethod tool.hierarchy/on-drag-start :circle
   [db _e]
@@ -53,5 +52,5 @@
   [(with-meta
      (:adjusted-pointer-pos db)
      {:label (if (= (:state db) :create)
-               #(t [::circle-radius "circle radius"])
-               #(t [::circle-center "circle center"]))})])
+               [::circle-radius "circle radius"]
+               [::circle-center "circle center"])})])

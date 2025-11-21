@@ -12,15 +12,14 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.tool.subs :as-alias tool.subs]))
 
 (derive :brush ::tool.hierarchy/draw)
 
 (defmethod tool.hierarchy/properties :brush
   []
   {:icon "brush"
-   :label (t [::label "Brush"])})
+   :label [::label "Brush"]})
 
 (defonce brush (reagent/atom nil))
 

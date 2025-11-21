@@ -5,10 +5,10 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -19,7 +19,7 @@
         active (= active-tool tool)
         primary (= cached-tool tool)
         properties (tool.hierarchy/properties tool)
-        label (or (:label properties)
+        label (or (some-> properties :label i18n.views/t)
                   (string/capitalize (name tool)))]
     (when (:icon properties)
       [:> Tooltip/Root
@@ -61,7 +61,7 @@
                   (when contains-active?
                     "bg-accent text-accent-foreground! hover:bg-accent-light
                      aria-expanded:bg-accent-light active:bg-accent-light")]
-          :aria-label label}
+          :aria-label (i18n.views/t label)}
          [views/icon icon]
          [views/icon "chevron-down"]]]
        [:> DropdownMenu/Portal
@@ -83,19 +83,19 @@
 
 (defn groups []
   [{:id :transform
-    :label (t [::transform "Transform tools"])
+    :label [::transform "Transform tools"]
     :tools [:transform :edit :pan :zoom]}
    {:id :containers
-    :label (t [::containers "Container tools"])
+    :label [::containers "Container tools"]
     :tools [:svg]}
    {:id :shapes
-    :label (t [::shapes "Shape tools"])
+    :label [::shapes "Shape tools"]
     :tools [:circle :ellipse :rect :line :polyline :polygon :image :text]}
    {:id :drawing
-    :label (t [::drawing "Drawing tools"])
+    :label [::drawing "Drawing tools"]
     :tools [:brush :pen]}
    {:id :misc
-    :label (t [::misc "Miscallaneous tools"])
+    :label [::misc "Miscallaneous tools"]
     :tools (cond-> [:fill :measure]
              @(rf/subscribe [::app.subs/feature? :eye-dropper])
              (conj :dropper))}])

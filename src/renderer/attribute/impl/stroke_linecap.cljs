@@ -2,14 +2,13 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-linecap"
   (:require
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.attribute.views :as attribute.views]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.attribute.views :as attribute.views]))
 
 (defmethod attribute.hierarchy/description [:default :stroke-linecap]
   []
-  (t [::description
-      "The stroke-linecap attribute is a presentation attribute defining the
-       shape to be used at the end of open subpaths when they are stroked."]))
+  [::description
+   "The stroke-linecap attribute is a presentation attribute defining the
+    shape to be used at the end of open subpaths when they are stroked."])
 
 (defmethod attribute.hierarchy/form-element [:default :stroke-linecap]
   [_ k v attrs]
@@ -17,13 +16,13 @@
    (merge attrs {:default-value "butt"
                  :items [{:key :butt
                           :value "butt"
-                          :label (t [::butt "Butt"])
+                          :label [::butt "Butt"]
                           :icon "linecap-butt"}
                          {:key :round
                           :value "round"
-                          :label (t [::round "Round"])
+                          :label [::round "Round"]
                           :icon "linecap-round"}
                          {:key :square
                           :value "square"
-                          :label (t [::square "Square"])
+                          :label [::square "Square"]
                           :icon "linecap-square"}]})])

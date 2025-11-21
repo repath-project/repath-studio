@@ -18,10 +18,10 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.handlers :as i18n.handlers]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [tr]]
    [renderer.utils.vec :as utils.vec]))
 
 (def file-picker-options
@@ -91,7 +91,8 @@
           (document.handlers/close db id)
           (dialog.handlers/create
            db
-           {:title (tr db [::save-changes "Do you want to save your changes?"])
+           {:title (i18n.handlers/t db [::save-changes
+                                        "Do you want to save your changes?"])
             :content [dialog.views/save (get-in db [:documents id])]
             :attrs {:on-open-auto-focus #(.preventDefault %)}}))
     ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))
@@ -255,8 +256,11 @@
          {:dispatch [::load document]}))
      {::app.effects/toast
       [:error
-       (tr db [::error-loading "Error while loading %1"] [(:title document)])
-       {:description (tr db
+       (i18n.handlers/t db
+                        [::error-loading "Error while loading %1"]
+                        [(:title document)])
+       {:description
+        (i18n.handlers/t db
                          [::unsupported-or-corrupted
                           "File appears to be unsupported or corrupted."])}]})))
 
@@ -296,11 +300,13 @@
               (document.handlers/update-saved-history-index id))
         :fx [(when is-migrated
                [::app.effects/toast
-                [:success (tr db [::document-migrated "Document migrated"])
+                [:success (i18n.handlers/t db [::document-migrated
+                                               "Document migrated"])
                  {:description
-                  (tr db [::document-migrated-description
-                          "The document was created with an older version of the
-                           app and was migrated to the latest version."])}]])
+                  (i18n.handlers/t
+                   db [::document-migrated-description
+                       "The document was created with an older version of the
+                        app and was migrated to the latest version."])}]])
              [:dispatch [::persist-file-handle file-handle id]]]}
        (let [explanation (-> document document.db/explain m.error/humanize str)]
          {::app.effects/toast
@@ -309,8 +315,7 @@
 (rf/reg-event-fx
  ::load-multiple
  (fn [_ [_ documents]]
-   {:dispatch-n (->> documents
-                     (mapv (partial vector ::check-if-open)))}))
+   {:dispatch-n (mapv (partial vector ::check-if-open) documents)}))
 
 (defn- file-save-options
   [document on-success on-error]

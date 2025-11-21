@@ -7,7 +7,6 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :line ::tool.hierarchy/element)
@@ -15,7 +14,7 @@
 (defmethod tool.hierarchy/properties :line
   []
   {:icon "line-tool"
-   :label (t [::label "Line"])})
+   :label [::label "Line"]})
 
 (defmethod tool.hierarchy/on-drag-start :line
   [db _e]

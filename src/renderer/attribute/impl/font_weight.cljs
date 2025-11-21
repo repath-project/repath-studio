@@ -5,15 +5,14 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.attribute :as utils.attribute]))
 
 (defmethod attribute.hierarchy/description [:default :font-weight]
   []
-  (t [::description
-      "The font-weight attribute refers to the boldness or lightness of the
-       glyphs used to render the text, relative to other fonts in the same font
-       family."]))
+  [::description
+   "The font-weight attribute refers to the boldness or lightness of the
+    glyphs used to render the text, relative to other fonts in the same font
+    family."])
 
 (defn label
   [weight]
@@ -30,5 +29,5 @@
      (merge attrs
             {:default-value "400"
              :items (mapv #(do {:key %
-                                :label (label %)
+                                :label [k (label %)]
                                 :value %}) weights)})]))

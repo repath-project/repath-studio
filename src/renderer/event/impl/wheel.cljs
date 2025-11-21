@@ -6,7 +6,7 @@
    [renderer.event.db :refer [WheelEvent]]
    [renderer.event.events :as-alias event.events]))
 
-(m/=> ->clj [:-> JS_Object WheelEvent])
+(m/=> ->clj [:-> any? WheelEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent"
   [^js/WheelEvent e]

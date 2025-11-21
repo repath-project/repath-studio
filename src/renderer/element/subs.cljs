@@ -68,7 +68,7 @@
 (rf/reg-sub
  ::some-selected?
  :<- [::selected]
- seq)
+ (comp boolean seq))
 
 (rf/reg-sub
  ::selected-locked?
@@ -80,7 +80,7 @@
  ::multiple-selected?
  :<- [::selected]
  (fn [selected-elements _]
-   (seq (rest selected-elements))))
+   (boolean (seq (rest selected-elements)))))
 
 (rf/reg-sub
  ::selected-attrs
@@ -148,3 +148,8 @@
    (->> (:id root)
         (disj (set ancestor-ids))
         (empty?))))
+
+(rf/reg-sub
+ ::not-every-top-level?
+ :<- [::every-top-level?]
+ not)

@@ -120,6 +120,10 @@
   :zoom-focus-selected "Fokusera markerat"
   :zoom-fit-selected "Anpassa markerat"
   :zoom-fill-selected "Fyll markerat"
+  :theme-mode "Tema-läge"
+  :dark "Mörk"
+  :light "Ljus"
+  :system "System"
   :accessibility-filter "Tillgänglighetsfilter"
   :language "Språk"
   :grid "Rutnät"
@@ -196,20 +200,42 @@
  {:cut "Klipp ut"
   :copy "Kopiera"
   :paste "Klistra in"
-  :raise "Lyft fram"
-  :lower "Lägg bak"
-  :raise-top "Lyft till toppen"
-  :lower-bottom "Lägg längst bak"
+  :raise "Höj"
+  :lower "Sänk"
+  :raise-top "Höj till toppen"
+  :lower-bottom "Sänk till botten"
   :animate "Animera"
   :animate-transform "Animera transformation"
   :animate-motion "Animera rörelse"
   :duplicate "Duplicera"
   :delete "Ta bort"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Animera"
+  :description "SVG-elementet <animate> ger ett sätt att animera ett attribut
+                för ett element över tid."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animera rörelse"
+  :description "SVG-elementet <animateMotion> låter dig definiera hur ett
+                element rör sig längs en rörelseväg."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animera transformation"
+  :description "Elementet <animateTransform> animerar ett
+                transformationsattribut på sitt målelement, vilket gör det
+                möjligt för animationer att styra translation, skalning,
+                rotation och/eller skevning"}
+
+ :renderer.element.impl.box
+ {:position-handle "positionshandtag"
+  :size-handle "storlekshandtag"}
+
  :renderer.element.impl.shape.circle
  {:label "Cirkel"
   :description "SVG <circle> elementet är en SVG grundform, använd för att rita
-                cirklar baserat på en mittpunkt och radie."}
+                cirklar baserade på en mittpunkt och en radie."
+  :r-handle "radiehandtag"}
 
  :renderer.element.impl.shape.image
  {:label "Bild"
@@ -219,19 +245,26 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellips"
   :description "Elementet <ellipse> är en SVG grundform, använd för att skapa
-                ellipser baserat på en mittkoordinat och både deras x- och
-                y-radie."}
+                ellipser baserade på en mittkoordinat och både deras x- och
+                y-radie."
+  :rx-handle "x-radiehandtag"
+  :ry-handle "y-radiehandtag"}
 
  :renderer.element.impl.shape.line
  {:label "Linje"
   :description "Elementet <line> är en SVG grundform använd för att skapa en
-                linje som förbinder två punkter."}
+                linje som förbinder två punkter."
+  :starting-point "startpunkt"
+  :ending-point "slutpunkt"}
 
  :renderer.element.impl.shape.path
  {:label "Bana"
   :description "SVG <path> elementet är det generiska elementet för att
                 definiera en form. Alla grundformer kan skapas med ett path
                 element."}
+
+ :renderer.element.impl.shape.poly
+ {:point "punkt"}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
@@ -259,22 +292,29 @@
   :extra-points "Det verkliga antalet punkter kommer att vara
                  `3 + extraPoints`."
   :randomness "Ökar mängden variation i punktposition."
-  :size "Storleken på gränsrutan."
+  :size "Storleken på begränsningsrutan."
   :description "Vektorbaserad blob."
-  :generate-random-seed "Generera slumpmässigt frö"}
+  :generate-random-seed "Generera slumpmässigt frö"
+  :size-handle "storlekshandtag"}
 
  :renderer.element.impl.custom.brush
  {:label "Pensel"
   :points "Inmatningspunkter inspelade från användarens musrörelse."
   :size "Basstorleken (diameter) på linjen."
   :thinning "Effekten av tryck på linjens storlek."
-  :smoothing "Hur mycket linjens kanter ska mjukas upp."
+  :smoothing "Hur mycket linjekanterna ska mjukas upp."
   :stream-line "Hur mycket linjen ska strömlinjeformas."
-  :description "Rita tryckkänsliga frihandslinjer med perfect-freehand."}
+  :description "Rita tryckkänsliga frihandslinjer med perfect-freehand."
+  :brush-point "penselpunkt"}
 
  :renderer.element.impl.container.canvas
  {:label "Duk"
   :description "Duken är huvud-SVG behållaren som innehåller alla element."}
+
+ :renderer.element.impl.container.group
+ {:label "Grupp"
+  :description "SVG-elementet <g> är en behållare som används för att gruppera
+                andra SVG-element."}
 
  :renderer.element.impl.container.svg
  {:description "SVG elementet är en behållare som definierar ett nytt
@@ -426,7 +466,8 @@
  {:label "Bild"}
 
  :renderer.tool.impl.element.core
- {:help "Klicka och dra för att skapa ett element."}
+ {:help "Klicka och dra för att skapa ett element."
+  :edge "kant"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Klicka för att lägga till fler punkter."
@@ -527,7 +568,23 @@
  :renderer.attribute.impl.font-size
  {:description "Attributet font-size refererar till storleken på typsnittet
                 från baslinje till baslinje när flera textrader är satta fast i
-                en flerradig layoutmiljö."}
+                en flerradig layoutmiljö."
+  :xx-small "XX-Liten"
+  :x-small "X-Liten"
+  :small "Liten"
+  :medium "Medium"
+  :large "Stor"
+  :x-large "X-Stor"
+  :xx-large "XX-Stor"
+  :xxx-large "XXX-Stor"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Attributet font-size refererar till storleken på typsnittet
+                från baslinje till baslinje när flera textrader är satta fast i
+                en flerradig layoutmiljö."
+  :normal "Normal"
+  :italic "Kursiv"
+  :oblique "Sned"}
 
  :renderer.attribute.impl.font-weight
  {:description "Attributet font-weight refererar till tjockleken eller
@@ -560,9 +617,10 @@
   :help-idle-click [:div "Klicka på ett element för att ändra markering"]
   :help-edit [:div "Håll %1 för att begränsa riktning."]
   :help-type [:div "Ange din text."]
-  :select-element "Markera element"
+  :select-element "Välj element"
   :edit "Redigera"
-  :centroid "Tyngdpunkt"}
+  :centroid "Centroid"
+  :handle "handtag"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformera"

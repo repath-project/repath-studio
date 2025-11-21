@@ -8,7 +8,6 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.path :as utils.path]))
 
 (derive :pen ::tool.hierarchy/draw)
@@ -16,7 +15,7 @@
 (defmethod tool.hierarchy/properties :pen
   []
   {:icon "pencil"
-   :label (t [::label "Pen"])})
+   :label [::label "Pen"]})
 
 (defmethod tool.hierarchy/on-drag-start :pen
   [db _e]

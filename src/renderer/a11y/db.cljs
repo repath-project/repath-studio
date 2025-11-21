@@ -1,7 +1,7 @@
 (ns renderer.a11y.db
   (:require
    [malli.core :as m]
-   [renderer.utils.i18n :refer [Translation]]))
+   [renderer.i18n.db :refer [Translation]]))
 
 (def A11yFilterId keyword?)
 
@@ -53,16 +53,20 @@
      [:label Translation]
      [:attrs [:map-of keyword? string?]]]]])
 
+(def valid-filter? (m/validator A11yFilter))
+
+(def explain-filter (m/explainer A11yFilter))
+
 (def default
   [{:id :blur
     :tag :feGaussianBlur
-    :label [[::blur "blur"]]
+    :label [::blur "blur"]
     :attrs {:in "SourceGraphic"
             :stdDeviation "1"}}
 
    {:id :blur-x2
     :tag :feGaussianBlur
-    :label [[::blur-x2 "blur-x2"]]
+    :label [::blur-x2 "blur-x2"]
     :attrs {:in "SourceGraphic"
             :stdDeviation "2"}}
 
@@ -70,7 +74,7 @@
 
    {:id :protanopia
     :tag :feColorMatrix
-    :label [[::protanopia "protanopia"]]
+    :label [::protanopia "protanopia"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.567, 0.433, 0, 0, 0
@@ -80,7 +84,7 @@
 
    {:id :protanomaly
     :tag :feColorMatrix
-    :label [[::protanomaly "protanomaly"]]
+    :label [::protanomaly "protanomaly"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.817, 0.183, 0, 0, 0
@@ -90,7 +94,7 @@
 
    {:id :deuteranopia
     :tag :feColorMatrix
-    :label [[::deuteranopia "deuteranopia"]]
+    :label [::deuteranopia "deuteranopia"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.625, 0.375, 0, 0, 0
@@ -100,7 +104,7 @@
 
    {:id :deuteranomaly
     :tag :feColorMatrix
-    :label [[::deuteranomaly "deuteranomaly"]]
+    :label [::deuteranomaly "deuteranomaly"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.8, 0.2, 0, 0, 0
@@ -110,7 +114,7 @@
 
    {:id :tritanopia
     :tag :feColorMatrix
-    :label [[::tritanopia "tritanopia"]]
+    :label [::tritanopia "tritanopia"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.95, 0.05, 0, 0, 0
@@ -120,7 +124,7 @@
 
    {:id :tritanomaly
     :tag :feColorMatrix
-    :label [[::tritanomaly "tritanomaly"]]
+    :label [::tritanomaly "tritanomaly"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.967, 0.033, 0, 0, 0
@@ -130,7 +134,7 @@
 
    {:id :achromatopsia
     :tag :feColorMatrix
-    :label [[::tritanomaly "tritanomaly"]]
+    :label [::tritanomaly "tritanomaly"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.299, 0.587, 0.114, 0, 0
@@ -140,7 +144,7 @@
 
    {:id :achromatomaly
     :tag :feColorMatrix
-    :label [[::achromatopsia "achromatopsia"]]
+    :label [::achromatopsia "achromatopsia"]
     :attrs {:in "SourceGraphic"
             :type "matrix"
             :values "0.618, 0.320, 0.062, 0, 0

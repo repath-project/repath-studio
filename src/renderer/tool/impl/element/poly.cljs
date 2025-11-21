@@ -5,18 +5,19 @@
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.attribute :as utils.attribute]))
 
 (derive ::tool.hierarchy/poly ::tool.hierarchy/element)
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/poly :idle]
   []
   [:<>
-   [:div (t [::add-points "Click to add more points."])]
-   [:div (t [::finalize-shape "Double click to finalize the shape."])]])
+   [:div (i18n.views/t [::add-points "Click to add more points."])]
+   [:div (i18n.views/t [::finalize-shape
+                        "Double click to finalize the shape."])]])
 
 (defn create-el
   [db initial-point]

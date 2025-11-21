@@ -9,6 +9,9 @@
    [renderer.document.db :refer [Document DocumentId RecentDocument]]
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
+   [renderer.i18n.db
+    :as i18n.db
+    :refer [LanguageCodeIdentifier LanguageId Languages]]
    [renderer.menubar.db :refer [Menubar]]
    [renderer.panel.db :as panel.db :refer [Panel PanelId]]
    [renderer.ruler.db :refer [Ruler]]
@@ -16,7 +19,6 @@
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.db :refer [Handle Tool State Cursor]]
-   [renderer.utils.i18n :refer [Lang]]
    [renderer.window.db :refer [Window]]))
 
 (def Platform
@@ -77,9 +79,10 @@
    [:loading {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:default "system"
-           :persist true} [:or Lang [:= "system"]]]
-   [:system-lang {:optional true} string?]
+   [:user-lang {:default "system"
+                :persist true} LanguageId]
+   [:system-lang {:optional true} LanguageCodeIdentifier]
+   [:languages {:default i18n.db/default} Languages]
    [:platform {:optional true} Platform]
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]

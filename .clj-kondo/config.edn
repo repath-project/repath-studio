@@ -33,6 +33,10 @@
                       malli.core m
                       re-frame.core rf
                       reagent.core reagent
+                      renderer.a11y.db a11y.db
+                      renderer.a11y.events a11y.events
+                      renderer.a11y.handlers a11y.handlers
+                      renderer.a11y.subs a11y.subs
                       renderer.app.db app.db
                       renderer.app.effects app.effects
                       renderer.app.events app.events
@@ -61,6 +65,12 @@
                       renderer.event.effects event.effects
                       renderer.event.events event.events
                       renderer.event.handlers event.handlers
+                      renderer.i18n.db i18n.db
+                      renderer.i18n.effects i18n.effects
+                      renderer.i18n.events i18n.events
+                      renderer.i18n.handlers i18n.handlers
+                      renderer.i18n.subs i18n.subs
+                      renderer.i18n.views i18n.views
                       renderer.frame.db frame.db
                       renderer.frame.events frame.events
                       renderer.frame.handlers frame.handlers

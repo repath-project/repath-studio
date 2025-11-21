@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.element.core
   (:require
    [renderer.element.handlers :as element.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.impl.element.circle]
@@ -12,14 +13,13 @@
    [renderer.tool.impl.element.polyline]
    [renderer.tool.impl.element.rect]
    [renderer.tool.impl.element.svg]
-   [renderer.tool.impl.element.text]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.tool.impl.element.text]))
 
 (derive ::tool.hierarchy/element ::tool.hierarchy/tool)
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/element :idle]
   []
-  (t [::help "Click and drag to create an element."]))
+  (i18n.views/t [::help "Click and drag to create an element."]))
 
 (defmethod tool.hierarchy/on-activate ::tool.hierarchy/element
   [db]
@@ -29,7 +29,7 @@
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (str (name (:tool db)) " edge")})])
+     {:label [::edge "edge"]})])
 
 (defmethod tool.hierarchy/snapping-elements ::tool.hierarchy/element
   [db]

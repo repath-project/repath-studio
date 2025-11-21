@@ -2,7 +2,7 @@
   (:require
    [renderer.db :refer [Vec2]]
    [renderer.element.db :refer [Element ElementId]]
-   [renderer.utils.i18n :refer [Translation]]))
+   [renderer.i18n.db :refer [Translation]]))
 
 (def HistoryIndex [:or pos-int? zero?])
 

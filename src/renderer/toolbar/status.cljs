@@ -10,13 +10,13 @@
    [renderer.element.events :as-alias element.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.frame.events :as-alias frame.events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.panel.events :as-alias panel.events]
    [renderer.panel.subs :as-alias panel.subs]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.snap.views :as snap.views]
    [renderer.timeline.views :as timeline.views]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
@@ -33,24 +33,24 @@
       [:span.mr-1 "Y:"] [:span (utils.length/->fixed y 2 false)]]]))
 
 (defn zoom-options []
-  [{:label (t [::zoom-set-50 "Set to 50%"])
+  [{:label [::zoom-set-50 "Set to 50%"]
     :id "50"
     :action [::frame.events/set-zoom 0.5]}
-   {:label (t [::zoom-set-100 "Set to 100%"])
+   {:label [::zoom-set-100 "Set to 100%"]
     :id "100"
     :action [::frame.events/set-zoom 1]}
-   {:label (t [::zoom-set-200 "Set to 200%"])
+   {:label [::zoom-set-200 "Set to 200%"]
     :id "200"
     :action [::frame.events/set-zoom 2]}
    {:id :divider-1
     :type :separator}
-   {:label (t [::zoom-focus-selected "Focus selected"])
+   {:label [::zoom-focus-selected "Focus selected"]
     :id "center-selected"
     :action [::frame.events/focus-selection :original]}
-   {:label (t [::zoom-fit-selected "Fit selected"])
+   {:label [::zoom-fit-selected "Fit selected"]
     :id "fit-selected"
     :action [::frame.events/focus-selection :fit]}
-   {:label (t [::zoom-fill-selected "Fill selected"])
+   {:label [::zoom-fill-selected "Fill selected"]
     :id "fill-selected"
     :action [::frame.events/focus-selection :fill]}])
 
@@ -58,7 +58,7 @@
   []
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
-    {:title (t [::select-zoom "Select zoom level"])
+    {:title (i18n.views/t [::select-zoom "Select zoom level"])
      :side "top"
      :as-child true}
     [:button.button.flex.items-center.justify-center.px-2.font-mono
@@ -79,25 +79,25 @@
 (defn view-radio-buttons []
   (cond-> []
     @(rf/subscribe [::window.subs/xl?])
-    (into [{:title (t [::timeline "Timeline"])
+    (into [{:title [::timeline "Timeline"]
             :active [::panel.subs/visible? :timeline]
             :icon "animation"
             :action [::panel.events/toggle :timeline]}
-           {:title (t [::history "History"])
+           {:title [::history "History"]
             :active [::panel.subs/visible? :history]
             :icon "history"
             :action [::panel.events/toggle :history]}
-           {:title (t [::xml "XML"])
+           {:title [::xml "XML"]
             :active [::panel.subs/visible? :xml]
             :icon "code"
             :action [::panel.events/toggle :xml]}])
 
     :always
-    (into [{:title (t [::grid "Grid"])
+    (into [{:title [::grid "Grid"]
             :active [::app.subs/grid]
             :icon "grid"
             :action [::app.events/toggle-grid]}
-           {:title (t [::rulers "Rulers"])
+           {:title [::rulers "Rulers"]
             :active [::ruler.subs/visible?]
             :icon "ruler-combined"
             :action [::ruler.events/toggle-visible]}])))
@@ -122,7 +122,7 @@
         value (utils.length/->fixed (* 100 zoom) precision false)]
     [:input.text-right.font-mono.p-1
      {:key zoom
-      :aria-label (t [::zoom "Zoom"])
+      :aria-label (i18n.views/t [::zoom "Zoom"])
       :type "number"
       :input-mode "decimal"
       :min "1"
@@ -145,13 +145,13 @@
     [views/button-group
      [:button.button.px-2.font-mono.rounded
       {:disabled (<= zoom 0.01)
-       :title (t [::zoom-out "Zoom out"])
+       :title (i18n.views/t [::zoom-out "Zoom out"])
        :on-click #(rf/dispatch [::frame.events/zoom-out])}
       [views/icon "minus"]]
 
      [:button.button.px-2.font-mono.rounded
       {:disabled (>= zoom 100)
-       :title (t [::zoom-in "Zoom in"])
+       :title (i18n.views/t [::zoom-in "Zoom in"])
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
      [:div.flex.hidden.items-center
@@ -169,7 +169,7 @@
     [:span
      [views/radio-icon-button icon @(rf/subscribe active)
       {:class class
-       :aria-label title
+       :aria-label (i18n.views/t title)
        :on-click #(rf/dispatch action)}]]]
    [:> Tooltip/Portal
     [:> Tooltip/Content
@@ -178,7 +178,7 @@
       :side "top"
       :on-escape-key-down #(.stopPropagation %)}
      [:div.flex.gap-2.items-center
-      title
+      (i18n.views/t title)
       [views/shortcuts action]]]]])
 
 (defn color-selectors []
@@ -195,11 +195,11 @@
                                  (get-hex %)])}
 
       [:button.button.border.border-border.button-size.rounded
-       {:title (t [::fill-color "Pick fill color"])
+       {:title (i18n.views/t [::fill-color "Pick fill color"])
         :style {:background fill}}]]
 
-     [:button.button.bg-transparent!.rounded-sm
-      {:title (t [::swap-color "Swap fill with stroke"])
+     [:button.button.bg-transparent!.rounded
+      {:title (i18n.views/t [::swap-color "Swap fill with stroke"])
        :on-click #(rf/dispatch [::document.events/swap-colors])}
       [views/icon "swap-horizontal"]]
 
@@ -211,8 +211,8 @@
        :on-change #(rf/dispatch [::document.events/preview-attr
                                  :stroke
                                  (get-hex %)])}
-      [:button.relative.border.border-border.button-size.rounded
-       {:title (t [::stroke-color "Pick stroke color"])
+      [:button.relative.border.border-border.button-size.rounded-sm
+       {:title (i18n.views/t [::stroke-color "Pick stroke color"])
         :style {:background stroke}}
        [:div.bg-primary.absolute.border.border-border.rounded-xs
         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]))
@@ -223,8 +223,7 @@
             md:py-1 gap-2 md:gap-1"}
    [color-selectors]
    [:div.grow.hidden.md:block]
-   (into [:<>]
-         (map radio-button (view-radio-buttons)))
+   (into [:<>] (map radio-button (view-radio-buttons)))
    [snap.views/root]
    [zoom-button-group]
    [coordinates]

@@ -13,12 +13,12 @@
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.tree.effects :as tree.effects]
    [renderer.tree.events :as-alias tree.events]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -33,7 +33,7 @@
                group-hover:opacity-100 focus:opacity-100 outline-inherit
                button-size-small rounded-xs m-0"
               (when (not state) "opacity-30 md:opacity-0")]
-      :title (t title)
+      :title (i18n.views/t title)
       :on-double-click #(.stopPropagation %)
       :on-click (fn [e]
                   (.stopPropagation e)
@@ -49,7 +49,7 @@
   [el]
   (let [{:keys [id label visible selected tag]} el
         properties (element.hierarchy/properties tag)
-        tag-label (or (:label properties)
+        tag-label (or (some-> properties :label i18n.views/t)
                       (string/capitalize (name tag)))]
     (reagent/with-let [edit-mode? (reagent/atom false)]
       (if @edit-mode?
@@ -77,7 +77,9 @@
            :on-double-click (fn [e]
                               (.stopPropagation e)
                               (reset! edit-mode? true))}
-          (if (empty? label) tag-label label)]]))))
+          (if (empty? label)
+            tag-label
+            label)]]))))
 
 (defn drop-handler!
   [e parent-id]

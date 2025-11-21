@@ -119,6 +119,10 @@
   :zoom-focus-selected "聚焦选择"
   :zoom-fit-selected "适合选择"
   :zoom-fill-selected "填充选择"
+  :theme-mode "主题模式"
+  :dark "深色"
+  :light "浅色"
+  :system "系统"
   :accessibility-filter "辅助功能过滤器"
   :language "语言"
   :grid "网格"
@@ -195,8 +199,8 @@
  {:cut "剪切"
   :copy "复制"
   :paste "粘贴"
-  :raise "上移"
-  :lower "下移"
+  :raise "提升"
+  :lower "降低"
   :raise-top "置于顶层"
   :lower-bottom "置于底层"
   :animate "动画"
@@ -205,9 +209,27 @@
   :duplicate "复制"
   :delete "删除"}
 
+ :renderer.element.impl.animation.animate
+ {:label "动画"
+  :description "SVG <animate> 元素提供了一种随时间为元素的属性设置动画的方法。"}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "运动动画"
+  :description "SVG <animateMotion> 元素允许定义元素如何沿着运动路径移动。"}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "变换动画"
+  :description "<animateTransform> 元素在其目标元素上为变换属性设置动画,从而
+                允许动画控制平移、缩放、旋转和/或倾斜"}
+
+ :renderer.element.impl.box
+ {:position-handle "位置手柄"
+  :size-handle "大小手柄"}
+
  :renderer.element.impl.shape.circle
  {:label "圆形"
-  :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"}
+  :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"
+  :r-handle "半径手柄"}
 
  :renderer.element.impl.shape.image
  {:label "图像"
@@ -217,16 +239,23 @@
  :renderer.element.impl.shape.ellipse
  {:label "椭圆"
   :description "元素 <ellipse> 是一个 SVG 基本形状，用于创建基于中心坐标及其 x 和 y
-                半径的椭圆。"}
+                半径的椭圆。"
+  :rx-handle "x 半径手柄"
+  :ry-handle "y 半径手柄"}
 
  :renderer.element.impl.shape.line
  {:label "线条"
-  :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"}
+  :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"
+  :starting-point "起始点"
+  :ending-point "终点"}
 
  :renderer.element.impl.shape.path
  {:label "路径"
   :description "SVG 元素 <path> 是定义形状的通用元素。所有基本形状都可以用路径元素
                 创建。"}
+
+ :renderer.element.impl.shape.poly
+ {:point "点"}
 
  :renderer.element.impl.shape.polygon
  {:label "多边形"
@@ -251,20 +280,26 @@
   :randomness "增加点位置的变化量。"
   :size "边界框的大小。"
   :description "基于矢量的 blob。"
-  :generate-random-seed "生成随机种子"}
+  :generate-random-seed "生成随机种子"
+  :size-handle "大小手柄"}
 
  :renderer.element.impl.custom.brush
  {:label "画笔"
   :points "从用户鼠标移动记录的输入点。"
   :size "笔画的基本大小（直径）。"
   :thinning "压力对笔画大小的影响。"
-  :smoothing "平滑笔画边缘的程度。"
-  :stream-line "简化笔画的程度。"
-  :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"}
+  :smoothing "笔画边缘的平滑程度。"
+  :stream-line "笔画的简化程度。"
+  :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"
+  :brush-point "画笔点"}
 
  :renderer.element.impl.container.canvas
  {:label "画布"
   :description "画布是承载所有元素的主要 SVG 容器。"}
+
+ :renderer.element.impl.container.group
+ {:label "组"
+  :description "<g> SVG元素是一个用于对其他SVG元素进行分组的容器。"}
 
  :renderer.element.impl.container.svg
  {:description "svg 元素是定义新坐标系统和视口的容器。它用作 SVG 文档的最外层元素，
@@ -359,7 +394,8 @@
                           viewBox 的元素如何适合具有不同纵横比的视口。"}
 
  :renderer.tool.impl.element.core
- {:help "点击并拖动以创建元素。"}
+ {:help "点击并拖动以创建元素。"
+  :edge "边缘"}
 
  :renderer.tool.impl.element.poly
  {:add-points "点击添加更多点。"
@@ -464,7 +500,22 @@
 
  :renderer.attribute.impl.font-size
  {:description "font-size 属性是指在多行布局环境中设置多行文本时从基线到
-                基线的字体大小。"}
+                基线的字体大小。"
+  :xx-small "XX小"
+  :x-small "X小"
+  :small "小"
+  :medium "中"
+  :large "大"
+  :x-large "X大"
+  :xx-large "XX大"
+  :xxx-large "XXX大"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size 属性是指在多行布局环境中设置多行文本时从基线到
+                基线的字体大小。"
+  :normal "正常"
+  :italic "斜体"
+  :oblique "倾斜"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight 属性是指用于渲染文本的字形的粗细或轻重，相对于
@@ -494,7 +545,8 @@
   :help-type [:div "输入您的文本。"]
   :select-element "选择元素"
   :edit "编辑"
-  :centroid "质心"}
+  :centroid "质心"
+  :handle "句柄"}
 
  :renderer.tool.impl.base.transform
  {:label "变换"

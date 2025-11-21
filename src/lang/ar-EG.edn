@@ -120,6 +120,10 @@
   :zoom-focus-selected "تركيز على المحدد"
   :zoom-fit-selected "ملائمة المحدد"
   :zoom-fill-selected "ملء المحدد"
+  :theme-mode "وضع السمة"
+  :dark "مظلم"
+  :light "فاتح"
+  :system "النظام"
   :accessibility-filter "مرشح إمكانية الوصول"
   :language "اللغة"
   :grid "الشبكة"
@@ -206,10 +210,30 @@
   :duplicate "مضاعفة"
   :delete "حذف"}
 
+ :renderer.element.impl.animation.animate
+ {:label "تحريك"
+  :description "يوفر عنصر SVG <animate> طريقة لتحريك سمة عنصر عبر الزمن."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "تحريك الحركة"
+  :description "يتيح عنصر SVG <animateMotion> تحديد كيفية تحرك عنصر على
+                طول مسار الحركة."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "تحريك التحويل"
+  :description "يقوم عنصر <animateTransform> بتحريك سمة التحويل على العنصر
+                المستهدف، مما يسمح بالرسوم المتحركة للتحكم في الترجمة
+                والتحجيم والدوران و/أو الانحراف"}
+
+ :renderer.element.impl.box
+ {:position-handle "مقبض الموضع"
+  :size-handle "مقبض الحجم"}
+
  :renderer.element.impl.shape.circle
  {:label "دائرة"
   :description "عنصر <circle> هو شكل SVG أساسي، يُستخدم لرسم الدوائر
-                بناءً على نقطة مركز ونصف قطر."}
+                بناءً على نقطة مركز ونصف قطر."
+  :r-handle "مقبض نصف القطر"}
 
  :renderer.element.impl.shape.image
  {:label "صورة"
@@ -220,17 +244,24 @@
  {:label "قطع ناقص"
   :description "عنصر <ellipse> هو شكل SVG أساسي، يُستخدم لإنشاء القطع
                 الناقص بناءً على إحداثي مركز، ونصف قطر في الاتجاهين x
-                و y."}
+                و y."
+  :rx-handle "مقبض نصف القطر x"
+  :ry-handle "مقبض نصف القطر y"}
 
  :renderer.element.impl.shape.line
  {:label "خط"
   :description "عنصر <line> هو شكل SVG أساسي يُستخدم لإنشاء خط يصل
-                بين نقطتين."}
+                بين نقطتين."
+  :starting-point "نقطة البداية"
+  :ending-point "نقطة النهاية"}
 
  :renderer.element.impl.shape.path
  {:label "مسار"
   :description "عنصر <path> في SVG هو العنصر العام لتعريف شكل. يمكن
                 إنشاء جميع الأشكال الأساسية باستخدام عنصر مسار."}
+
+ :renderer.element.impl.shape.poly
+ {:point "نقطة"}
 
  :renderer.element.impl.shape.polygon
  {:label "مضلع"
@@ -259,21 +290,27 @@
   :randomness "يزيد من كمية التنوع في موضع النقطة."
   :size "حجم الصندوق المحيط."
   :description "نقطة قائمة على المتجهات."
-  :generate-random-seed "توليد بذرة عشوائية"}
+  :generate-random-seed "توليد بذرة عشوائية"
+  :size-handle "مقبض الحجم"}
 
  :renderer.element.impl.custom.brush
  {:label "فرشاة"
   :points "نقاط الإدخال المسجلة من حركة فأرة المستخدم."
   :size "الحجم الأساسي (القطر) للخط."
   :thinning "تأثير الضغط على حجم الخط."
-  :smoothing "مقدار تنعيم حواف الخط."
-  :stream-line "مقدار تبسيط الخط."
-  :description "ارسم خطوطاً حساسة للضغط باستخدام perfect-freehand."}
+  :smoothing "مدى نعومة حواف الخط."
+  :stream-line "مدى تبسيط الخط."
+  :description "ارسم خطوطاً حرة حساسة للضغط باستخدام perfect-freehand."
+  :brush-point "نقطة الفرشاة"}
 
  :renderer.element.impl.container.canvas
  {:label "لوحة الرسم"
   :description "لوحة الرسم هي حاوية SVG الرئيسية التي تستضيف جميع
                 العناصر."}
+
+ :renderer.element.impl.container.group
+ {:label "مجموعة"
+  :description "عنصر SVG <g> هو حاوية تُستخدم لتجميع عناصر SVG أخرى."}
 
  :renderer.element.impl.container.svg
  {:description "عنصر svg هو حاوية تُعرف نظام إحداثيات جديد ومنفذ عرض.
@@ -401,7 +438,8 @@
                           ارتفاع مختلفة."}
 
  :renderer.tool.impl.element.core
- {:help "انقر واسحب لإنشاء عنصر."}
+ {:help "انقر واسحب لإنشاء عنصر."
+  :edge "حافة"}
 
  :renderer.tool.impl.element.poly
  {:add-points "انقر لإضافة المزيد من النقاط."
@@ -510,7 +548,23 @@
  :renderer.attribute.impl.font-size
  {:description "خاصية font-size تشير إلى حجم الخط من الخط الأساسي
                 إلى الخط الأساسي عندما يتم تعيين خطوط متعددة من النص
-                صلبة في بيئة تخطيط متعدد الأسطر."}
+                صلبة في بيئة تخطيط متعدد الأسطر."
+  :xx-small "XX-صغير"
+  :x-small "X-صغير"
+  :small "صغير"
+  :medium "متوسط"
+  :large "كبير"
+  :x-large "X-كبير"
+  :xx-large "XX-كبير"
+  :xxx-large "XXX-كبير"}
+
+ :renderer.attribute.impl.font-style
+ {:description "خاصية font-size تشير إلى حجم الخط من الخط الأساسي
+                إلى الخط الأساسي عندما يتم تعيين خطوط متعددة من النص
+                صلبة في بيئة تخطيط متعدد الأسطر."
+  :normal "عادي"
+  :italic "مائل"
+  :oblique "منحرف"}
 
  :renderer.attribute.impl.font-weight
  {:description "خاصية font-weight تشير إلى جرأة أو خفة الرموز
@@ -543,7 +597,8 @@
   :help-type [:div "أدخل النص الخاص بك."]
   :select-element "تحديد عنصر"
   :edit "تحرير"
-  :centroid "النقطة المركزية"}
+  :centroid "مركز الكتلة"
+  :handle "مقبض"}
 
  :renderer.tool.impl.base.transform
  {:label "تحويل"

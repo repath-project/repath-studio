@@ -120,6 +120,10 @@
   :zoom-focus-selected "Focus selected"
   :zoom-fit-selected "Fit selected"
   :zoom-fill-selected "Fill selected"
+  :theme-mode "Theme mode"
+  :dark "Dark"
+  :light "Light"
+  :system "System"
   :accessibility-filter "Accessibility filter"
   :language "Language"
   :grid "Grid"
@@ -206,10 +210,30 @@
   :duplicate "Duplicate"
   :delete "Delete"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Animate"
+  :description "The SVG <animate> element provides a way to animate an attribute
+                of an element over time."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animate Motion"
+  :description "The SVG <animateMotion> element let define how an element moves
+                along a motion path."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animate Transform"
+  :description "The <animateTransform> element animates a transformation
+                attribute on its target element, thereby allowing animations to
+                control translation, scaling, rotation, and/or skewing"}
+
+ :renderer.element.impl.box {:position-handle "position handle"
+                             :size-handle "size handle"}
+
  :renderer.element.impl.shape.circle
  {:label "Circle"
   :description "The <circle> SVG element is an SVG basic shape, used to draw
-                circles based on a center point and a radius."}
+                circles based on a center point and a radius."
+  :r-handle "radius handle"}
 
  :renderer.element.impl.shape.image
  {:label "Image"
@@ -220,17 +244,24 @@
  {:label "Ellipse"
   :description "The <ellipse> element is an SVG basic shape, used to create
                 ellipses based on a center coordinate, and both their x and y
-                radius."}
+                radius."
+  :rx-handle "x radius handle"
+  :ry-handle "y radius handle"}
 
  :renderer.element.impl.shape.line
  {:label "Line"
   :description "The <line> element is an SVG basic shape used to create a line
-                connecting two points."}
+                connecting two points."
+  :starting-point "starting point"
+  :ending-point "ending point"}
 
  :renderer.element.impl.shape.path
  {:label "Path"
   :description "The <path> SVG element is the generic element to define a shape.
                 All the basic shapes can be created with a path element."}
+
+ :renderer.element.impl.shape.poly
+ {:point "point"}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
@@ -259,7 +290,8 @@
   :randomness "Increases the amount of variation in point position."
   :size "The size of the bounding box."
   :description "Vector based blob."
-  :generate-random-seed "Generate random seed"}
+  :generate-random-seed "Generate random seed"
+  :size-handle "size handle"}
 
  :renderer.element.impl.custom.brush
  {:label "Brush"
@@ -268,11 +300,17 @@
   :thinning "The effect of pressure on the stroke's size."
   :smoothing "How much to soften the stroke's edges."
   :stream-line "How much to streamline the stroke."
-  :description "Draw pressure-sensitive freehand lines using perfect-freehand."}
+  :description "Draw pressure-sensitive freehand lines using perfect-freehand."
+  :brush-point "brush point"}
 
  :renderer.element.impl.container.canvas
  {:label "Canvas"
   :description "The canvas is the main SVG container that hosts all elements."}
+
+ :renderer.element.impl.container.group
+ {:label "Group"
+  :description "The <g> SVG element is a container used to group other SVG
+                elements."}
 
  :renderer.element.impl.container.svg
  {:description "The svg element is a container that defines a new coordinate
@@ -420,7 +458,8 @@
  {:label "Image"}
 
  :renderer.tool.impl.element.core
- {:help "Click and drag to create an element."}
+ {:help "Click and drag to create an element."
+  :edge "edge"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Click to add more points."
@@ -519,7 +558,23 @@
  :renderer.attribute.impl.font-size
  {:description "The font-size attribute refers to the size of the font from
                 baseline to baseline when multiple lines of text are set solid
-                in a multiline layout environment."}
+                in a multiline layout environment."
+  :xx-small "XX-Small"
+  :x-small "X-Small"
+  :small "Small"
+  :medium "Medium"
+  :large "Large"
+  :x-large "X-Large"
+  :xx-large "XX-Large"
+  :xxx-large "XXX-Large"}
+
+ :renderer.attribute.impl.font-style
+ {:description "The font-size attribute refers to the size of the font from
+                 baseline to baseline when multiple lines of text are set solid
+                 in a multiline layout environment."
+  :normal "Normal"
+  :italic "Italic"
+  :oblique "Oblique"}
 
  :renderer.attribute.impl.font-weight
  {:description "The font-weight attribute refers to the boldness or lightness of
@@ -553,7 +608,8 @@
   :help-type [:div "Enter your text."]
   :select-element "Select element"
   :edit "Edit"
-  :centroid "Centroid"}
+  :centroid "Centroid"
+  :handle "handle"}
 
  :renderer.tool.impl.base.transform
  {:label "Transform"

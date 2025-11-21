@@ -4,9 +4,9 @@
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]))
 
@@ -15,12 +15,12 @@
 (defmethod tool.hierarchy/properties :rect
   []
   {:icon "rectangle-tool"
-   :label (t [::label "Rectangle"])})
+   :label [::label "Rectangle"]})
 
 (defmethod tool.hierarchy/help [:rect :create]
   []
-  (t [::help [:div "Hold %1 to lock proportions."]]
-     [[views/kbd "Ctrl"]]))
+  (i18n.views/t [::help [:div "Hold %1 to lock proportions."]]
+                [[views/kbd "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]

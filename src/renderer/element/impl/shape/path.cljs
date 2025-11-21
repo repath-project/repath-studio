@@ -9,7 +9,6 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :path ::element.hierarchy/shape)
@@ -17,11 +16,11 @@
 (defmethod element.hierarchy/properties :path
   []
   {:icon "bezier-curve"
-   :label (t [::label "Path"])
-   :description (t [::description
-                    "The <path> SVG element is the generic element to define a
-                     shape. All the basic shapes can be created with a path
-                     element."])
+   :label [::label "Path"]
+   :description [::description
+                 "The <path> SVG element is the generic element to define a
+                  shape. All the basic shapes can be created with a path
+                  element."]
    :attrs [:stroke-width
            :fill
            :stroke

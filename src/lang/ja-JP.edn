@@ -120,6 +120,10 @@
   :zoom-focus-selected "選択項目にフォーカス"
   :zoom-fit-selected "選択項目にフィット"
   :zoom-fill-selected "選択項目を画面に合わせる"
+  :theme-mode "テーマモード"
+  :dark "ダーク"
+  :light "ライト"
+  :system "システム"
   :accessibility-filter "アクセシビリティフィルタ"
   :language "言語"
   :grid "グリッド"
@@ -201,15 +205,36 @@
   :raise-top "最前面へ"
   :lower-bottom "最背面へ"
   :animate "アニメーション"
-  :animate-transform "変形をアニメーション"
-  :animate-motion "モーションをアニメーション"
+  :animate-transform "トランスフォームアニメーション"
+  :animate-motion "モーションアニメーション"
   :duplicate "複製"
   :delete "削除"}
+
+ :renderer.element.impl.animation.animate
+ {:label "アニメーション"
+  :description "SVG <animate> 要素は、要素の属性を時間とともにアニメーション
+                化する方法を提供します。"}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "モーションアニメーション"
+  :description "SVG <animateMotion> 要素は、要素がモーションパスに沿ってどの
+                ように移動するかを定義できます。"}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "トランスフォームアニメーション"
+  :description "<animateTransform> 要素は、ターゲット要素のトランスフォーム
+                属性をアニメーション化し、平行移動、拡大縮小、回転、および/
+                または傾斜を制御するアニメーションを可能にします"}
+
+ :renderer.element.impl.box
+ {:position-handle "位置ハンドル"
+  :size-handle "サイズハンドル"}
 
  :renderer.element.impl.shape.circle
  {:label "円"
   :description "<circle> SVG要素は、中心点と半径に基づいて円を描画するために使用される
-                SVG基本形状です。"}
+                SVG基本形状です。"
+  :r-handle "半径ハンドル"}
 
  :renderer.element.impl.shape.image
  {:label "画像"
@@ -219,17 +244,24 @@
  :renderer.element.impl.shape.ellipse
  {:label "楕円"
   :description "<ellipse>要素は、中心座標とx、y半径に基づいて楕円を作成するために
-                使用されるSVG基本形状です。"}
+                使用されるSVG基本形状です。"
+  :rx-handle "x半径ハンドル"
+  :ry-handle "y半径ハンドル"}
 
  :renderer.element.impl.shape.line
  {:label "線"
   :description "<line>要素は、2つの点を接続する線を作成するために使用される
-                SVG基本形状です。"}
+                SVG基本形状です。"
+  :starting-point "開始点"
+  :ending-point "終了点"}
 
  :renderer.element.impl.shape.path
  {:label "パス"
   :description "<path> SVG要素は、形状を定義する汎用要素です。すべての基本形状は
                 パス要素で作成できます。"}
+
+ :renderer.element.impl.shape.poly
+ {:point "ポイント"}
 
  :renderer.element.impl.shape.polygon
  {:label "多角形"
@@ -252,23 +284,30 @@
   :y "ブロブの中心のY座標。"
   :seed "指定されたシードは常に同じブロブを生成します。"
   :extra-points "実際の点数は `3 + extraPoints` になります。"
-  :randomness "点の位置のバリエーションの量を増加させます。"
-  :size "境界ボックスのサイズ。"
+  :randomness "ポイントの位置のバリエーション量を増やします。"
+  :size "バウンディングボックスのサイズ。"
   :description "ベクターベースのブロブ。"
-  :generate-random-seed "ランダムシードを生成"}
+  :generate-random-seed "ランダムシードを生成"
+  :size-handle "サイズハンドル"}
 
  :renderer.element.impl.custom.brush
  {:label "ブラシ"
   :points "ユーザーのマウス移動から記録された入力点。"
   :size "ストロークの基本サイズ（直径）。"
   :thinning "ストロークのサイズに対する圧力の影響。"
-  :smoothing "ストロークのエッジをどの程度柔らかくするか。"
-  :stream-line "ストロークをどの程度流線化するか。"
-  :description "perfect-freehandを使用して圧力感知フリーハンドラインを描画。"}
+  :smoothing "ストロークのエッジをどの程度滑らかにするか。"
+  :stream-line "ストロークをどの程度合理化するか。"
+  :description "perfect-freehandを使用して、筆圧感応のフリーハンドラインを描画します。"
+  :brush-point "ブラシポイント"}
 
  :renderer.element.impl.container.canvas
  {:label "キャンバス"
   :description "キャンバスは、すべての要素をホストするメインのSVGコンテナです。"}
+
+ :renderer.element.impl.container.group
+ {:label "グループ"
+  :description "<g> SVG要素は、他のSVG要素をグループ化するために使用される
+                コンテナです。"}
 
  :renderer.element.impl.container.svg
  {:description "svg要素は、新しい座標系とビューポートを定義するコンテナです。
@@ -384,7 +423,8 @@
                           示します。"}
 
  :renderer.tool.impl.element.core
- {:help "クリックしてドラッグして要素を作成します。"}
+ {:help "クリックしてドラッグして要素を作成します。"
+  :edge "エッジ"}
 
  :renderer.tool.impl.element.poly
  {:add-points "クリックしてポイントを追加。"
@@ -492,7 +532,23 @@
  :renderer.attribute.impl.font-size
  {:description "font-size属性は、マルチライン配置環境で複数行のテキストを
                 隙間なく設定する際の、ベースラインからベースラインまでの
-                フォントサイズを指します。"}
+                フォントサイズを指します。"
+  :xx-small "XX小"
+  :x-small "X小"
+  :small "小"
+  :medium "中"
+  :large "大"
+  :x-large "X大"
+  :xx-large "XX大"
+  :xxx-large "XXX大"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size属性は、マルチライン配置環境で複数行のテキストを
+                隙間なく設定する際の、ベースラインからベースラインまでの
+                フォントサイズを指します。"
+  :normal "標準"
+  :italic "イタリック"
+  :oblique "オブリーク"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight属性は、同じフォントファミリーの他のフォントと
@@ -526,7 +582,8 @@
   :help-type [:div "テキストを入力してください。"]
   :select-element "要素を選択"
   :edit "編集"
-  :centroid "重心"}
+  :centroid "重心"
+  :handle "ハンドル"}
 
  :renderer.tool.impl.base.transform
  {:label "変形"

@@ -6,36 +6,35 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.i18n.views :as i18n.views]
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
-(defn menu-option
-  [{:keys [id label]} is-checked]
-  [:> DropdownMenu/CheckboxItem
-   {:class "menu-checkbox-item inset"
-    :on-click #(.stopPropagation %)
-    :onSelect #(do (.preventDefault %)
-                   (rf/dispatch [::snap.events/toggle-option id]))
-    :checked is-checked}
-   [:> DropdownMenu/ItemIndicator
-    {:class "menu-item-indicator"}
-    [views/icon "checkmark"]]
-   label])
-
 (defn snap-options
   []
   [{:id :centers
-    :label (t [::centers "centers"])}
+    :type :checkbox
+    :action [::snap.events/toggle-option :centers]
+    :checked [::snap.subs/option-enabled? :centers]
+    :label [::centers "centers"]}
    {:id :midpoints
-    :label (t [::midpoints "midpoints"])}
+    :type :checkbox
+    :action [::snap.events/toggle-option :midpoints]
+    :checked [::snap.subs/option-enabled? :midpoints]
+    :label [::midpoints "midpoints"]}
    {:id :corners
-    :label (t [::corners "corners"])}
+    :type :checkbox
+    :action [::snap.events/toggle-option :corners]
+    :checked [::snap.subs/option-enabled? :corners]
+    :label [::corners "corners"]}
    {:id :nodes
-    :label (t [::nodes "nodes"])}])
+    :type :checkbox
+    :action [::snap.events/toggle-option :nodes]
+    :checked [::snap.subs/option-enabled? :nodes]
+    :label [::nodes "nodes"]}])
 
 (defn root
   []
@@ -43,7 +42,7 @@
         md? @(rf/subscribe [::window.subs/md?])]
     (reagent/with-let [open (reagent/atom false)]
       [:button.button.rounded-sm.items-center.gap-1.md:flex
-       {:title (t [::snap "Snap"])
+       {:title (i18n.views/t [::snap "Snap"])
         :class ["active:bg-overlay"
                 (when md? "px-1")
                 (when @active? "accent")
@@ -51,35 +50,28 @@
         :on-click #(rf/dispatch [::snap.events/toggle])}
        [views/icon "magnet"]
        (when md?
-         (let [options @(rf/subscribe [::snap.subs/options])]
-           [:> DropdownMenu/Root
-            {:on-open-change #(reset! open %)}
-            [:> DropdownMenu/Trigger
-             {:as-child true}
-             [:div.h-full.flex.items-center.hover:pb-1
-              {:class "min-h-[inherit]"
-               :role "button"
-               :title (t [::snap-options "Snap options"])}
-              [views/icon "chevron-up"]]]
-            [:> DropdownMenu/Portal
-             (->> (snap-options)
-                  (map #(menu-option % (contains? options (:id %))))
-                  (into [:> DropdownMenu/Content
-                         {:side "top"
-                          :align "end"
-                          :sideOffset 5
-                          :alignOffset -5
-                          :position "popper"
-                          :class "menu-content rounded-sm select-content"
-                          :on-key-down #(.stopPropagation %)
-                          :on-escape-key-down #(.stopPropagation %)}
-                         [views/dropdownmenu-arrow]]))]]))])))
-
-(defn get-label [label]
-  (when label
-    (if (string? label)
-      label
-      (label))))
+         [:> DropdownMenu/Root
+          {:on-open-change #(reset! open %)}
+          [:> DropdownMenu/Trigger
+           {:as-child true}
+           [:div.h-full.flex.items-center.hover:pb-1
+            {:class "min-h-[inherit]"
+             :role "button"
+             :title (i18n.views/t [::snap-options "Snap options"])}
+            [views/icon "chevron-up"]]]
+          [:> DropdownMenu/Portal
+           (->> (snap-options)
+                (map views/dropdown-menu-item)
+                (into [:> DropdownMenu/Content
+                       {:side "top"
+                        :align "end"
+                        :sideOffset 5
+                        :alignOffset -5
+                        :position "popper"
+                        :class "menu-content rounded-sm select-content"
+                        :on-key-down #(.stopPropagation %)
+                        :on-escape-key-down #(.stopPropagation %)}
+                       [views/dropdownmenu-arrow]]))]])])))
 
 (defn canvas-label
   [nearest-neighbor]
@@ -90,8 +82,9 @@
         point (:point nearest-neighbor)
         [x y] (matrix/add point margin)
         label (->> [base-label point-label]
-                   (keep get-label)
-                   (string/join (t [::to " to "])))]
+                   (remove nil?)
+                   (map i18n.views/t)
+                   (string/join (i18n.views/t [::to " to "])))]
     [:<>
      [utils.svg/times point]
      (when (not-empty label)

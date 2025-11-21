@@ -1,8 +1,7 @@
 (ns renderer.app.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.app.handlers :as app.handlers]
-   [renderer.utils.i18n :as utils.i18n]))
+   [renderer.app.handlers :as app.handlers]))
 
 (rf/reg-sub
  ::pointer-pos
@@ -71,27 +70,6 @@
         (rest))))
 
 (rf/reg-sub
- ::lang
- :-> :lang)
-
-(rf/reg-sub
- ::system-lang
- :-> :system-lang)
-
-(rf/reg-sub
- ::computed-lang
- :<- [::lang]
- :<- [::system-lang]
- (fn [[lang system-lang] _]
-   (utils.i18n/computed-lang lang system-lang)))
-
-(rf/reg-sub
- ::lang-dir
- :<- [::computed-lang]
- (fn [computed-lang _]
-   (get-in utils.i18n/languages [computed-lang :dir])))
-
-(rf/reg-sub
  ::platform
  :-> :platform)
 
@@ -106,12 +84,6 @@
  :<- [::platform]
  (fn [platform _]
    (app.handlers/desktop? platform)))
-
-(rf/reg-sub
- ::mobile?
- :<- [::platform]
- (fn [platform _]
-   (app.handlers/mobile? platform)))
 
 (rf/reg-sub
  ::mac?
@@ -156,17 +128,3 @@
  :<- [::features]
  (fn [features [_ k]]
    (contains? features k)))
-
-(rf/reg-sub
- ::menubar
- :-> :menubar)
-
-(rf/reg-sub
- ::menubar-indicator?
- :<- [::menubar]
- :-> :indicator)
-
-(rf/reg-sub
- ::menubar-active
- :<- [::menubar]
- :-> :active)

@@ -13,7 +13,6 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :brush ::element.hierarchy/renderable)
@@ -21,10 +20,9 @@
 (defmethod element.hierarchy/properties :brush
   []
   {:icon "brush"
-   :label (t [::label "Brush"])
-   :description (t [::description
-                    "Draw pressure-sensitive freehand lines using
-                     perfect-freehand."])
+   :label [::label "Brush"]
+   :description [::description "Draw pressure-sensitive freehand lines using
+                                perfect-freehand."]
    :url "https://github.com/steveruizok/perfect-freehand"
    :attrs [:points
            :stroke
@@ -57,23 +55,23 @@
 
 (defmethod attribute.hierarchy/description [:brush ::points]
   []
-  (t [::points "Input points recorded from a user's mouse movement."]))
+  [::points "Input points recorded from a user's mouse movement."])
 
 (defmethod attribute.hierarchy/description [:brush :size]
   []
-  (t [::size "The base size (diameter) of the stroke."]))
+  [::size "The base size (diameter) of the stroke."])
 
 (defmethod attribute.hierarchy/description [:brush :thinning]
   []
-  (t [::thinning "The effect of pressure on the stroke's size."]))
+  [::thinning "The effect of pressure on the stroke's size."])
 
 (defmethod attribute.hierarchy/description [:brush :smoothing]
   []
-  (t [::smoothing "How much to soften the stroke's edges."]))
+  [::smoothing "How much to soften the stroke's edges."])
 
 (defmethod attribute.hierarchy/description [:brush :streamline]
   []
-  (t [::stream-line "How much to streamline the stroke."]))
+  [::stream-line "How much to streamline the stroke."])
 
 (defn get-svg-path-from-stroke
   "Turns the points returned by getStroke into SVG path data.
@@ -189,6 +187,8 @@
                                                   :x x
                                                   :y y
                                                   :type :handle
+                                                  :label [::brush-point
+                                                          "brush point"]
                                                   :action :edit
                                                   :element-id (:id el)}]))
                    (-> el :attrs :points points->vec))])

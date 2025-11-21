@@ -120,6 +120,10 @@
   :zoom-focus-selected "Εστίαση επιλογής"
   :zoom-fit-selected "Προσαρμογή επιλογής"
   :zoom-fill-selected "Γέμισμα επιλογής"
+  :theme-mode "Λειτουργία θέματος"
+  :dark "Σκοτεινό"
+  :light "Φωτεινό"
+  :system "Σύστημα"
   :accessibility-filter "Φίλτρο προσβασιμότητας"
   :language "Γλώσσα"
   :grid "Πλέγμα"
@@ -196,21 +200,43 @@
  {:cut "Αποκοπή"
   :copy "Αντιγραφή"
   :paste "Επικόλληση"
-  :raise "Ανέβασμα"
-  :lower "Κατέβασμα"
-  :raise-top "Μετακίνηση προς τα πάνω"
-  :lower-bottom "Μετακίνηση προς τα κάτω"
+  :raise "Ανύψωση"
+  :lower "Χαμήλωμα"
+  :raise-top "Ανύψωση στην κορυφή"
+  :lower-bottom "Χαμήλωμα στο κάτω μέρος"
   :animate "Κίνηση"
-  :animate-transform "Μετατροπή κίνησης"
+  :animate-transform "Κίνηση μετασχηματισμού"
   :animate-motion "Κίνηση κίνησης"
   :duplicate "Δημιουργία αντιγράφου"
   :delete "Διαγραφή"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Κίνηση"
+  :description "Το στοιχείο SVG <animate> παρέχει έναν τρόπο για την κίνηση
+                ενός χαρακτηριστικού ενός στοιχείου με την πάροδο του χρόνου."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Κίνηση κίνησης"
+  :description "Το στοιχείο SVG <animateMotion> επιτρέπει τον ορισμό του πώς
+                ένα στοιχείο κινείται κατά μήκος μιας διαδρομής κίνησης."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Κίνηση μετασχηματισμού"
+  :description "Το στοιχείο <animateTransform> κινεί ένα χαρακτηριστικό
+                μετασχηματισμού στο στοχευόμενο στοιχείο, επιτρέποντας έτσι
+                στις κινήσεις να ελέγχουν τη μετάφραση, την κλιμάκωση, την
+                περιστροφή ή/και την κλίση"}
+
+ :renderer.element.impl.box
+ {:position-handle "χειριστήριο θέσης"
+  :size-handle "χειριστήριο μεγέθους"}
 
  :renderer.element.impl.shape.circle
  {:label "Κύκλος"
   :description "Το στοιχείο <circle> είναι ένα βασικό σχήμα SVG, που
                 χρησιμοποιείται για τη σχεδίαση κύκλων με βάση ένα κεντρικό
-                σημείο και μια ακτίνα."}
+                σημείο και μια ακτίνα."
+  :r-handle "χειριστήριο ακτίνας"}
 
  :renderer.element.impl.shape.image
  {:label "Εικόνα"
@@ -221,19 +247,26 @@
  {:label "'Ελλειψη"
   :description "Το στοιχείο <ellipse> είναι ένα βασικό σχήμα SVG, που
                 χρησιμοποιείται για τη δημιουργία ελλείψεων με βάση ένα κεντρικό
-                σημείο και τις ακτίνες τους στους άξονες x και y."}
+                σημείο και τις ακτίνες τους στους άξονες x και y."
+  :rx-handle "χειριστήριο ακτίνας x"
+  :ry-handle "χειριστήριο ακτίνας y"}
 
  :renderer.element.impl.shape.line
  {:label "Γραμμή"
   :description "Το στοιχείο <line> είναι ένα βασικό σχήμα SVG που
                 χρησιμοποιείται για τη δημιουργία μιας γραμμής που συνδέει δύο
-                σημεία."}
+                σημεία."
+  :starting-point "αρχικό σημείο"
+  :ending-point "τελικό σημείο"}
 
  :renderer.element.impl.shape.path
  {:label "Path"
   :description "Το στοιχείο <path> στο SVG είναι το γενικό στοιχείο για τον
                 ορισμό ενός σχήματος. Όλα τα βασικά σχήματα μπορούν να
                 δημιουργηθούν χρησιμοποιώντας ένα path στοιχείο"}
+
+ :renderer.element.impl.shape.poly
+ {:point "σημείο"}
 
  :renderer.element.impl.shape.polygon
  {:label "Πολύγωνο"
@@ -262,8 +295,9 @@
   :extra-points "Ο πραγματικός αριθμός των σημείων θα είναι `3 + extraPoints`"
   :randomness "Αυξάνει την ποσότητα της μεταβλητότητας στη θέση των σημείων."
   :size "Το μέγεθος του πλαισίου οριοθέτησης."
-  :description "Διανυσματικό blob."
-  :generate-random-seed "Δημιουργία τυχαίου seed"}
+  :description "Blob βασισμένο σε διανύσματα."
+  :generate-random-seed "Δημιουργία τυχαίου seed"
+  :size-handle "χειριστήριο μεγέθους"}
 
  :renderer.element.impl.custom.brush
  {:label "Πινέλο"
@@ -274,12 +308,18 @@
   :smoothing "Ο βαθμός απαλότητας στις άκρες της γραμμής."
   :stream-line "Ο βαθμός απλοποίησης της γραμμής."
   :description "Σχεδιάστε γραμμές με ευαισθησία στην πίεση χρησιμοποιώντας το
-                perfect-freehand."}
+                perfect-freehand."
+  :brush-point "σημείο πινέλου"}
 
  :renderer.element.impl.container.canvas
  {:label "Καμβάς"
   :description "Ο καμβάς είναι το κύριο πλαίσιο SVG που περιέχει όλα τα
                 στοιχεία."}
+
+ :renderer.element.impl.container.group
+ {:label "Ομάδα"
+  :description "Το στοιχείο <g> του SVG είναι ένα δοχείο που χρησιμοποιείται
+                για να ομαδοποιήσει άλλα στοιχεία SVG."}
 
  :renderer.element.impl.container.svg
  {:description "Το στοιχείο svg είναι μια θέση υποδοχής (container) που ορίζει
@@ -430,7 +470,8 @@
                           σε ένα viewport με διαφορετικές διαστάσεις."}
 
  :renderer.tool.impl.element.core
- {:help "Κάντε κλίκ και σύρετε για να δημιουργήσετε ένα στοιχείο"}
+ {:help "Κάντε κλίκ και σύρετε για να δημιουργήσετε ένα στοιχείο"
+  :edge "άκρη"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Κάντε κλικ για να προσθέτε σημεία."
@@ -543,7 +584,24 @@
  {:description "To χαρακτηριστικό font-size αναφέρεται στο μέγεθος της
                 γραμματοσειράς από τη βασική γραμμή έως την επόμενη βασική
                 γραμμή, όταν πολλαπλές γραμμές κειμένου τοποθετούνται σε συνεχή
-                διάταξη μέσα σε ένα περιβάλλον πολλαπλών γραμμών."}
+                διάταξη μέσα σε ένα περιβάλλον πολλαπλών γραμμών."
+  :xx-small "XX-Μικρό"
+  :x-small "X-Μικρό"
+  :small "Μικρό"
+  :medium "Μεσαίο"
+  :large "Μεγάλο"
+  :x-large "X-Μεγάλο"
+  :xx-large "XX-Μεγάλο"
+  :xxx-large "XXX-Μεγάλο"}
+
+ :renderer.attribute.impl.font-style
+ {:description "To χαρακτηριστικό font-size αναφέρεται στο μέγεθος της
+                γραμματοσειράς από τη βασική γραμμή έως την επόμενη βασική
+                γραμμή, όταν πολλαπλές γραμμές κειμένου τοποθετούνται σε συνεχή
+                διάταξη μέσα σε ένα περιβάλλον πολλαπλών γραμμών."
+  :normal "Κανονικό"
+  :italic "Πλάγιο"
+  :oblique "Λοξό"}
 
  :renderer.attribute.impl.font-weight
  {:description "To χαρακτηριστικό font-weight αναφέρεται στο πάχος ή την
@@ -581,7 +639,8 @@
   :help-type [:div "Εισάγετε κείμενο."]
   :select-element "Επιλογή στοιχείου"
   :edit "Επεξεργασία"
-  :centroid "Κέντρο μάζας"}
+  :centroid "Κέντρο μάζας"
+  :handle "χειριστήριο"}
 
  :renderer.tool.impl.base.transform
  {:label "Μετασχηματισμός"

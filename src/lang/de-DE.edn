@@ -120,6 +120,10 @@
   :zoom-focus-selected "Auswahl fokussieren"
   :zoom-fit-selected "An Auswahl anpassen"
   :zoom-fill-selected "Auswahl ausfüllen"
+  :theme-mode "Thema-Modus"
+  :dark "Dunkel"
+  :light "Hell"
+  :system "System"
   :accessibility-filter "Barrierefreiheitsfilter"
   :language "Sprache"
   :grid "Raster"
@@ -196,21 +200,43 @@
  {:cut "Ausschneiden"
   :copy "Kopieren"
   :paste "Einfügen"
-  :raise "Nach vorne"
-  :lower "Nach hinten"
-  :raise-top "Ganz nach vorne"
-  :lower-bottom "Ganz nach hinten"
+  :raise "Anheben"
+  :lower "Absenken"
+  :raise-top "Ganz nach oben"
+  :lower-bottom "Ganz nach unten"
   :animate "Animieren"
-  :animate-transform "Transformation animieren"
+  :animate-transform "Transform animieren"
   :animate-motion "Bewegung animieren"
   :duplicate "Duplizieren"
   :delete "Löschen"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Animieren"
+  :description "Das SVG-Element <animate> bietet eine Möglichkeit, ein
+                Attribut eines Elements über die Zeit zu animieren."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Bewegung animieren"
+  :description "Das SVG-Element <animateMotion> ermöglicht die Definition, wie
+                sich ein Element entlang eines Bewegungspfads bewegt."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Transform animieren"
+  :description "Das Element <animateTransform> animiert ein
+                Transformationsattribut auf seinem Zielelement und ermöglicht
+                so Animationen zur Steuerung von Translation, Skalierung,
+                Rotation und/oder Scherung"}
+
+ :renderer.element.impl.box
+ {:position-handle "Positionsgriff"
+  :size-handle "Größengriff"}
 
  :renderer.element.impl.shape.circle
  {:label "Kreis"
   :description "Das SVG-Element <circle> ist eine SVG-Grundform, die zum
                 Zeichnen von Kreisen basierend auf einem Mittelpunkt und einem
-                Radius verwendet wird."}
+                Radius verwendet wird."
+  :r-handle "Radiusgriff"}
 
  :renderer.element.impl.shape.image
  {:label "Bild"
@@ -220,19 +246,26 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellipse"
   :description "Das Element <ellipse> ist eine SVG-Grundform, die zum Erstellen
-                von Ellipsen basierend auf einer Mittelkoordinate und ihren x-
-                und y-Radien verwendet wird."}
+                von Ellipsen basierend auf einer Mittelkoordinate und sowohl
+                ihrem x- als auch y-Radius verwendet wird."
+  :rx-handle "x-Radiusgriff"
+  :ry-handle "y-Radiusgriff"}
 
  :renderer.element.impl.shape.line
  {:label "Linie"
   :description "Das Element <line> ist eine SVG-Grundform, die zum Erstellen
-                einer Linie verwendet wird, die zwei Punkte verbindet."}
+                einer Linie verwendet wird, die zwei Punkte verbindet."
+  :starting-point "Startpunkt"
+  :ending-point "Endpunkt"}
 
  :renderer.element.impl.shape.path
  {:label "Pfad"
   :description "Das SVG-Element <path> ist das generische Element zur Definition
                 einer Form. Alle Grundformen können mit einem Pfad-Element
                 erstellt werden."}
+
+ :renderer.element.impl.shape.poly
+ {:point "Punkt"}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
@@ -261,9 +294,10 @@
   :extra-points "Die tatsächliche Anzahl der Punkte wird `3 + extraPoints`
                  sein."
   :randomness "Erhöht die Menge der Variation in der Punktposition."
-  :size "Die Größe der Begrenzungsbox."
+  :size "Die Größe des Begrenzungsrahmens."
   :description "Vektorbasierter Blob."
-  :generate-random-seed "Zufälligen Seed generieren"}
+  :generate-random-seed "Zufälligen Seed generieren"
+  :size-handle "Größengriff"}
 
  :renderer.element.impl.custom.brush
  {:label "Pinsel"
@@ -271,15 +305,21 @@
            wurden."
   :size "Die Grundgröße (Durchmesser) des Strichs."
   :thinning "Der Effekt des Drucks auf die Größe des Strichs."
-  :smoothing "Wie viel die Kanten des Strichs geglättet werden sollen."
-  :stream-line "Wie viel der Strich gestrafft werden soll."
+  :smoothing "Wie stark die Kanten der Linie geglättet werden sollen."
+  :stream-line "Wie stark die Linie geglättet werden soll."
   :description "Zeichnen Sie druckempfindliche Freihandlinien mit
-                perfect-freehand."}
+                perfect-freehand."
+  :brush-point "Bürstenpunkt"}
 
  :renderer.element.impl.container.canvas
  {:label "Leinwand"
   :description "Die Leinwand ist der Haupt-SVG-Container, der alle Elemente
                 beherbergt."}
+
+ :renderer.element.impl.container.group
+ {:label "Gruppe"
+  :description "Das <g> SVG-Element ist ein Container, der verwendet wird, um
+                andere SVG-Elemente zu gruppieren."}
 
  :renderer.element.impl.container.svg
  {:description "Das svg-Element ist ein Container, der ein neues
@@ -426,7 +466,8 @@
                           einem anderen Seitenverhältnis passen muss."}
 
  :renderer.tool.impl.element.core
- {:help "Klicken und ziehen, um ein Element zu erstellen."}
+ {:help "Klicken und ziehen, um ein Element zu erstellen."
+  :edge "Kante"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Klicken, um weitere Punkte hinzuzufügen."
@@ -538,7 +579,23 @@
  :renderer.attribute.impl.font-size
  {:description "Das font-size-Attribut bezieht sich auf die Größe der Schrift
                 von Grundlinie zu Grundlinie, wenn mehrere Textzeilen in einer
-                mehrzeiligen Layout-Umgebung gesetzt werden."}
+                mehrzeiligen Layout-Umgebung gesetzt werden."
+  :xx-small "XX-Klein"
+  :x-small "X-Klein"
+  :small "Klein"
+  :medium "Mittel"
+  :large "Groß"
+  :x-large "X-Groß"
+  :xx-large "XX-Groß"
+  :xxx-large "XXX-Groß"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Das font-size-Attribut bezieht sich auf die Größe der Schrift
+                von Grundlinie zu Grundlinie, wenn mehrere Textzeilen in einer
+                mehrzeiligen Layout-Umgebung gesetzt werden."
+  :normal "Normal"
+  :italic "Kursiv"
+  :oblique "Schräg"}
 
  :renderer.attribute.impl.font-weight
  {:description "Das font-weight-Attribut bezieht sich auf die Fettheit oder
@@ -576,7 +633,8 @@
   :help-type [:div "Geben Sie Ihren Text ein."]
   :select-element "Element auswählen"
   :edit "Bearbeiten"
-  :centroid "Schwerpunkt"}
+  :centroid "Schwerpunkt"
+  :handle "Griff"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformieren"

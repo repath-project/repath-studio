@@ -21,6 +21,8 @@
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
+   [renderer.i18n.subs :as-alias i18n.subs]
+   [renderer.i18n.views :as i18n.views]
    [renderer.menubar.views :as menubar.views]
    [renderer.panel.subs :as-alias panel.subs]
    [renderer.panel.views :as panel.views]
@@ -37,7 +39,6 @@
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]
@@ -140,9 +141,9 @@
           [views/icon-button
            (if ruler-locked? "lock" "unlock")
            {:class "button-size-small rounded-xs m-0 bg-transparent! hidden"
-            :title (if ruler-locked?
-                     (t [::unlock "Unlock"])
-                     (t [::lock "Lock"]))
+            :title (i18n.views/t (if ruler-locked?
+                                   [::unlock "Unlock"]
+                                   [::lock "Lock"]))
             :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
           {:dir "ltr"
@@ -254,10 +255,10 @@
                                   (get db/a-series-paper-sizes %)])}
    [:> Select/Trigger
     {:class "button px-2 bg-overlay rounded-sm"
-     :aria-label (t [::select-size "Select size"])}
+     :aria-label (i18n.views/t [::select-size "Select size"])}
     [:div.flex.items-center.gap-2
      [:> Select/Value
-      {:placeholder (t [::select-template "Select template"])}]
+      {:placeholder (i18n.views/t [::select-template "Select template"])}]
      [:> Select/Icon
       [views/icon "chevron-down"]]]]
    [:> Select/Portal
@@ -272,7 +273,7 @@
         {:value :empty-canvas
          :class "menu-item px-2!"}
         [:> Select/ItemText
-         (t [::empty-canvas "Empty canvas"])]]
+         (i18n.views/t [::empty-canvas "Empty canvas"])]]
        (for [[k _v] (sort db/a-series-paper-sizes)]
          ^{:key k}
          [:> Select/Item
@@ -297,7 +298,7 @@
    [views/icon icon]
    [:button.button-link.text-lg
     {:on-click #(rf/dispatch event)}
-    label]
+    (i18n.views/t label)]
    [views/shortcuts event]])
 
 (defn home
@@ -315,18 +316,18 @@
          [:h1.text-4xl.mb-1.font-light config/app-name]
 
          [:p.text-xl.text-foreground-muted.font-bold
-          (t [::svg-description "Vector Graphics Editor"])]
+          (i18n.views/t [::svg-description "Vector Graphics Editor"])]
 
-         [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
+         [:h2.mb-3.mt-8.text-2xl (i18n.views/t [::start "Start"])]
 
          [:div.flex.items-center.gap-2.flex-wrap
           [views/icon "file"]
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::document.events/new])}
-           (t [::new "New"])]
+           (i18n.views/t [::new "New"])]
           [views/shortcuts [::document.events/new]]
 
-          [:span (t [::or "or"])]
+          [:span (i18n.views/t [::or "or"])]
 
           [document-size-select]]
 
@@ -334,31 +335,31 @@
           [views/icon "folder"]
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::document.events/open])}
-           (t [::open "Open"])]
+           (i18n.views/t [::open "Open"])]
           [views/shortcuts [::document.events/open]]]
 
          (when (seq recent-documents)
            [:<> [:h2.mb-3.mt-8.text-2xl
-                 (t [::recent "Recent"])]
+                 (i18n.views/t [::recent "Recent"])]
 
             (for [recent (take 5 recent-documents)]
               ^{:key (:id recent)}
               [recent-document recent])])
 
          [:h2.mb-3.mt-8.text-2xl
-          (t [::help "Help"])]
+          (i18n.views/t [::help "Help"])]
 
          (->> [["command"
-                (t [::command-panel "Command panel"])
+                [::command-panel "Command panel"]
                 [::dialog.events/show-cmdk]]
                ["earth"
-                (t [::website "Website"])
+                [::website "Website"]
                 [::events/open-remote-url "https://repath.studio/"]]
                ["commit"
-                (t [::source-code "Source Code"])
+                [::source-code "Source Code"]
                 [::events/open-remote-url "https://github.com/repath-studio/repath-studio"]]
                ["list"
-                (t [::changelog "Changelog"])
+                [::changelog "Changelog"]
                 [::events/open-remote-url "https://repath.studio/roadmap/changelog/"]]]
               (map #(apply help-command %))
               (into [:div]))]]]]]]])
@@ -371,26 +372,26 @@
 
      [views/drawer
       {:icon "tree"
-       :label (t [::tree "Tree"])
+       :label [::tree "Tree"]
        :direction "left"
        :content [tree.views/root]}]
 
      [views/drawer
       {:icon "code"
-       :label (t [::xml "XML"])
+       :label [::xml "XML"]
        :direction "left"
        :content [xml-panel]}]
      [:span.v-divider]
 
      [views/drawer
       {:icon "animation"
-       :label (t [::timeline "Timeline"])
+       :label [::timeline "Timeline"]
        :direction "bottom"
        :content [timeline.views/root]}]
 
      [views/drawer
       {:icon "shell"
-       :label (t [::shell "Shell"])
+       :label [::shell "Shell"]
        :direction "bottom"
        :content [repl.views/root]}]
 
@@ -398,13 +399,13 @@
 
      [views/drawer
       {:icon "history"
-       :label (t [::history "History"])
+       :label [::history "History"]
        :direction "right"
        :content [history.views/root]}]
 
      [views/drawer
       {:icon "properties"
-       :label (t [::attributes "Attributes"])
+       :label [::attributes "Attributes"]
        :direction "right"
        :disabled (not some-selected?)
        :content [right-panel active-tool]}]]))
@@ -416,7 +417,7 @@
         properties? @(rf/subscribe [::panel.subs/visible? :properties])
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
-        lang-dir @(rf/subscribe [::app.subs/lang-dir])
+        lang-dir @(rf/subscribe [::i18n.subs/lang-dir])
         desktop? @(rf/subscribe [::app.subs/desktop?])
         md? @(rf/subscribe [::window.subs/md?])
         loading? @(rf/subscribe [::app.subs/loading?])

@@ -11,17 +11,22 @@
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize])
 
-   (let [theme-mode (rf/subscribe [::theme.subs/mode])]
+   (let [theme-mode (rf/subscribe [::theme.subs/mode])
+         computed-mode (rf/subscribe [::theme.subs/computed-mode])]
 
      (testing "default theme"
-       (is (= :system @theme-mode)))
+       (is (= :system @theme-mode))
+       (is (= :light @computed-mode)))
 
      (testing "theme cycling"
-       (rf/dispatch [::theme.events/cycle-mode])
+       (rf/dispatch [::theme.events/set-mode :dark])
        (is (= :dark @theme-mode))
+       (is (= :dark @computed-mode))
 
-       (rf/dispatch [::theme.events/cycle-mode])
+       (rf/dispatch [::theme.events/set-mode :light])
        (is (= :light @theme-mode))
+       (is (= :light @computed-mode))
 
-       (rf/dispatch [::theme.events/cycle-mode])
-       (is (= :system @theme-mode))))))
+       (rf/dispatch [::theme.events/set-mode :system])
+       (is (= :system @theme-mode))
+       (is (= :light @computed-mode))))))

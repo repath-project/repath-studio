@@ -6,10 +6,10 @@
    [renderer.app.handlers :as app.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.frame.handlers :as frame.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
 
@@ -25,13 +25,13 @@
 (defmethod tool.hierarchy/properties :zoom
   []
   {:icon "magnifier"
-   :label (t [::label "Zoom"])})
+   :label [::label "Zoom"]})
 
 (defmethod tool.hierarchy/help [:zoom :idle]
   []
   [:<>
-   (t [::zoom-in "Click or select an area to zoom in."])
-   (t [::zoom-out "Hold %1 to zoom out."] [[views/kbd "⇧"]])])
+   (i18n.views/t [::zoom-in "Click or select an area to zoom in."])
+   (i18n.views/t [::zoom-out "Hold %1 to zoom out."] [[views/kbd "⇧"]])])
 
 (defmethod tool.hierarchy/on-activate :zoom
   [db]

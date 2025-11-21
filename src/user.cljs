@@ -9,65 +9,66 @@
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
    [renderer.history.events :as-alias history.events]
+   [renderer.i18n.events :as-alias i18n.events]
    [renderer.window.events :as-alias window.events]))
 
 (defn ^:export translate
   "Moves the selected elements."
   ([offset]
-   (rf/dispatch [::element.events/translate offset]))
+   (rf/dispatch-sync [::element.events/translate offset]))
   ([x y]
    (translate [x y])))
 
 (defn ^:export place
   "Moves the selected elements."
   ([pos]
-   (rf/dispatch [::element.events/place pos]))
+   (rf/dispatch-sync [::element.events/place pos]))
   ([x y]
    (place [x y])))
 
 (defn ^:export scale
   "Scales the selected elements."
   ([ratio]
-   (rf/dispatch [::element.events/scale (if (number? ratio)
-                                          [ratio ratio]
-                                          ratio)]))
+   (rf/dispatch-sync [::element.events/scale (if (number? ratio)
+                                               [ratio ratio]
+                                               ratio)]))
   ([x y]
-   (rf/dispatch [::element.events/scale [x y]])))
+   (rf/dispatch-sync [::element.events/scale [x y]])))
 
 (defn ^:export fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [::element.events/set-attr :fill color]))
+  (rf/dispatch-sync [::element.events/set-attr :fill color]))
 
 (defn ^:export delete
   "Deletes the selected elements."
   []
-  (rf/dispatch [::element.events/delete]))
+  (rf/dispatch-sync [::element.events/delete]))
 
 (defn ^:export copy
   "Copies the selected elements."
   []
-  (rf/dispatch [::element.events/copy]))
+  (rf/dispatch-sync [::element.events/copy]))
 
 (defn ^:export paste
   "Pastes the selected elements."
   []
-  (rf/dispatch [::element.events/paste]))
+  (rf/dispatch-sync [::element.events/paste]))
 
 (defn ^:export paste-in-place
   "Pastes the selected elements in place."
   []
-  (rf/dispatch [::element.events/paste-in-place]))
+  (rf/dispatch-sync [::element.events/paste-in-place]))
 
 (defn ^:export duplicate
   "Duplicates the selected elements."
   []
-  (rf/dispatch [::element.events/duplicate]))
+  (rf/dispatch-sync [::element.events/duplicate]))
 
 (defn ^:export create
   "Creates a new element."
   [el]
-  (rf/dispatch [::element.events/add el]))
+  (rf/dispatch-sync [::element.events/add el]))
 
 (defn ^:export circle
   "Creates a circle."
@@ -156,17 +157,17 @@
 (defn ^:export set-attr
   "Sets the attribute of the selected elements."
   [k v]
-  (rf/dispatch [::element.events/set-attr k v]))
+  (rf/dispatch-sync [::element.events/set-attr k v]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."
   [color]
-  (rf/dispatch [::document.events/set-attr :fill color]))
+  (rf/dispatch-sync [::document.events/set-attr :fill color]))
 
 (defn ^:export set-stroke
   "Sets the stroke color of the editor."
   [color]
-  (rf/dispatch [::document.events/set-attr :stroke color]))
+  (rf/dispatch-sync [::document.events/set-attr :stroke color]))
 
 (defn ^:export db
   []
@@ -183,49 +184,49 @@
 (defn ^:export raise
   "Raises the selected elements."
   []
-  (rf/dispatch [::element.events/raise]))
+  (rf/dispatch-sync [::element.events/raise]))
 
 (defn ^:export lower
   "Lowers the selected elements."
   []
-  (rf/dispatch [::element.events/lower]))
+  (rf/dispatch-sync [::element.events/lower]))
 
 (defn ^:export group
   "Groups the selected elements."
   []
-  (rf/dispatch [::element.events/group]))
+  (rf/dispatch-sync [::element.events/group]))
 
 (defn ^:export ungroup
   "Ungroups the selected elements."
   []
-  (rf/dispatch [::element.events/ungroup]))
+  (rf/dispatch-sync [::element.events/ungroup]))
 
 (defn ^:export select-all
   "Selects all elements."
   []
-  (rf/dispatch [::element.events/select-all]))
+  (rf/dispatch-sync [::element.events/select-all]))
 
 (defn ^:export deselect-all
   "Deselects all elements."
   []
-  (rf/dispatch [::element.events/deselect-all]))
+  (rf/dispatch-sync [::element.events/deselect-all]))
 
 (defn ^:export ->path
   "Converts the selected elements to paths."
   []
-  (rf/dispatch [::element.events/->path]))
+  (rf/dispatch-sync [::element.events/->path]))
 
 (defn ^:export stroke->path
   "Converts the selected elements' stroke to paths."
   []
-  (rf/dispatch [::element.events/stroke->path]))
+  (rf/dispatch-sync [::element.events/stroke->path]))
 
 (defn ^:export align
   "Aligns the selected elements to the provided direction.
    Accepted directions
    :left :right :top :bottom :center-vertical :center-horizontal"
   [direction]
-  (rf/dispatch [::element.events/align direction]))
+  (rf/dispatch-sync [::element.events/align direction]))
 
 (defn ^:export al
   "Aligns the selected elements to the left."
@@ -264,61 +265,76 @@
   ([attrs]
    (animate :animate attrs))
   ([tag attrs]
-   (rf/dispatch [::element.events/animate tag attrs])))
+   (rf/dispatch-sync [::element.events/animate tag attrs])))
 
 (defn ^:export undo
   "Goes back in history."
   ([]
-   (rf/dispatch [::history.events/undo]))
+   (rf/dispatch-sync [::history.events/undo]))
   ([steps]
-   (rf/dispatch [::history.events/undo-by steps])))
+   (rf/dispatch-sync [::history.events/undo-by steps])))
 
 (defn ^:export redo
   "Goes forward in history."
   ([]
-   (rf/dispatch [::history.events/redo]))
+   (rf/dispatch-sync [::history.events/redo]))
   ([steps]
-   (rf/dispatch [::history.events/redo-by steps])))
+   (rf/dispatch-sync [::history.events/redo-by steps])))
 
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [::element.events/boolean-operation :unite]))
+  (rf/dispatch-sync [::element.events/boolean-operation :unite]))
 
 (defn ^:export intersect
   "Intersects the selected elements."
   []
-  (rf/dispatch [::element.events/boolean-operation :intersect]))
+  (rf/dispatch-sync [::element.events/boolean-operation :intersect]))
 
 (defn ^:export subtract
   "Subtracts the selected elements."
   []
-  (rf/dispatch [::element.events/boolean-operation :subtract]))
+  (rf/dispatch-sync [::element.events/boolean-operation :subtract]))
 
 (defn ^:export exclude
   "Excludes the selected elements."
   []
-  (rf/dispatch [::element.events/boolean-operation :exclude]))
+  (rf/dispatch-sync [::element.events/boolean-operation :exclude]))
 
 (defn ^:export div
   "Divides the selected elements."
   []
-  (rf/dispatch [::element.events/boolean-operation :divide]))
+  (rf/dispatch-sync [::element.events/boolean-operation :divide]))
 
 (defn ^:export exit
   "Closes the application."
   []
-  (rf/dispatch [::window.events/close]))
+  (rf/dispatch-sync [::window.events/close]))
 
 (defn ^:export register-a11y-filter
   "Registers an accessibility filter."
-  [v]
-  (rf/dispatch [::a11y.events/register-filter v]))
+  [a11y-filter]
+  (rf/dispatch-sync [::a11y.events/register-filter a11y-filter]))
 
 (defn ^:export deregister-a11y-filter
   "Deregisters an accessibility filter."
-  [v]
-  (rf/dispatch [::a11y.events/deregister-filter v]))
+  [id]
+  (rf/dispatch-sync [::a11y.events/deregister-filter id]))
+
+(defn ^:export register-language
+  "Registers a language."
+  [language]
+  (rf/dispatch-sync [::i18n.events/register-language language]))
+
+(defn ^:export set-translation
+  "Sets a translation for a language."
+  [lang-id k v]
+  (rf/dispatch-sync [::i18n.events/set-translation lang-id k v]))
+
+(defn ^:export deregister-language
+  "Deregisters a language."
+  [id]
+  (rf/dispatch-sync [::i18n.events/deregister-language id]))
 
 (defn ^:export help
   "Lists available functions."

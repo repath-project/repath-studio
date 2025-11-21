@@ -120,6 +120,10 @@
   :zoom-focus-selected "Focaliser la sélection"
   :zoom-fit-selected "Ajuster à la sélection"
   :zoom-fill-selected "Remplir avec la sélection"
+  :theme-mode "Mode de thème"
+  :dark "Sombre"
+  :light "Clair"
+  :system "Système"
   :accessibility-filter "Filtre d'accessibilité"
   :language "Langue"
   :grid "Grille"
@@ -197,20 +201,42 @@
  {:cut "Couper"
   :copy "Copier"
   :paste "Coller"
-  :raise "Monter"
-  :lower "Descendre"
-  :raise-top "Monter au premier plan"
-  :lower-bottom "Descendre à l'arrière-plan"
+  :raise "Élever"
+  :lower "Abaisser"
+  :raise-top "Élever au premier plan"
+  :lower-bottom "Abaisser à l'arrière-plan"
   :animate "Animer"
   :animate-transform "Animer la transformation"
   :animate-motion "Animer le mouvement"
   :duplicate "Dupliquer"
   :delete "Supprimer"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Animer"
+  :description "L'élément SVG <animate> fournit un moyen d'animer un attribut
+                d'un élément au fil du temps."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animer le mouvement"
+  :description "L'élément SVG <animateMotion> permet de définir comment un
+                élément se déplace le long d'un chemin de mouvement."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animer la transformation"
+  :description "L'élément <animateTransform> anime un attribut de
+                transformation sur son élément cible, permettant ainsi aux
+                animations de contrôler la translation, la mise à l'échelle, la
+                rotation et/ou l'inclinaison"}
+
+ :renderer.element.impl.box
+ {:position-handle "poignée de position"
+  :size-handle "poignée de taille"}
+
  :renderer.element.impl.shape.circle
  {:label "Cercle"
   :description "L'élément SVG <circle> est une forme de base SVG, utilisée pour
-                dessiner des cercles basés sur un point central et un rayon."}
+                dessiner des cercles basés sur un point central et un rayon."
+  :r-handle "poignée de rayon"}
 
  :renderer.element.impl.shape.image
  {:label "Image"
@@ -221,19 +247,26 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellipse"
   :description "L'élément <ellipse> est une forme de base SVG, utilisée pour
-                créer des ellipses basées sur une coordonnée centrale et leurs
-                rayons x et y."}
+                créer des ellipses basées sur une coordonnée centrale, et leurs
+                rayons x et y."
+  :rx-handle "poignée de rayon x"
+  :ry-handle "poignée de rayon y"}
 
  :renderer.element.impl.shape.line
  {:label "Ligne"
   :description "L'élément <line> est une forme de base SVG utilisée pour créer
-                une ligne reliant deux points."}
+                une ligne reliant deux points."
+  :starting-point "point de départ"
+  :ending-point "point d'arrivée"}
 
  :renderer.element.impl.shape.path
  {:label "Tracé"
   :description "L'élément SVG <path> est l'élément générique pour définir une
                 forme. Toutes les formes de base peuvent être créées avec un
                 élément path."}
+
+ :renderer.element.impl.shape.poly
+ {:point "point"}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygone"
@@ -262,7 +295,8 @@
   :randomness "Augmente la quantité de variation dans la position des points."
   :size "La taille de la boîte englobante."
   :description "Blob basé sur des vecteurs."
-  :generate-random-seed "Générer une graine aléatoire"}
+  :generate-random-seed "Générer une graine aléatoire"
+  :size-handle "poignée de taille"}
 
  :renderer.element.impl.custom.brush
  {:label "Pinceau"
@@ -273,12 +307,18 @@
   :smoothing "Combien adoucir les bords du trait."
   :stream-line "Combien rationaliser le trait."
   :description "Dessinez des lignes à main levée sensibles à la pression en
-                utilisant perfect-freehand."}
+                utilisant perfect-freehand."
+  :brush-point "point de pinceau"}
 
  :renderer.element.impl.container.canvas
  {:label "Canevas"
   :description "Le canevas est le conteneur SVG principal qui héberge tous les
                 éléments."}
+
+ :renderer.element.impl.container.group
+ {:label "Groupe"
+  :description "L'élément SVG <g> est un conteneur utilisé pour regrouper
+                d'autres éléments SVG."}
 
  :renderer.element.impl.container.svg
  {:description "L'élément svg est un conteneur qui définit un nouveau système de
@@ -420,7 +460,8 @@
                           d'affichage avec un rapport d'aspect différent."}
 
  :renderer.tool.impl.element.core
- {:help "Cliquez et faites glisser pour créer un élément."}
+ {:help "Cliquez et faites glisser pour créer un élément."
+  :edge "bord"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Cliquez pour ajouter plus de points."
@@ -533,7 +574,24 @@
  {:description "L'attribut font-size fait référence à la taille de la police de
                 la ligne de base à la ligne de base lorsque plusieurs lignes de
                 texte sont définies solides dans un environnement de mise en
-                page multiligne."}
+                page multiligne."
+  :xx-small "XX-Petit"
+  :x-small "X-Petit"
+  :small "Petit"
+  :medium "Moyen"
+  :large "Grand"
+  :x-large "X-Grand"
+  :xx-large "XX-Grand"
+  :xxx-large "XXX-Grand"}
+
+ :renderer.attribute.impl.font-style
+ {:description "L'attribut font-size fait référence à la taille de la police de
+                la ligne de base à la ligne de base lorsque plusieurs lignes de
+                texte sont définies solides dans un environnement de mise en
+                page multiligne."
+  :normal "Normal"
+  :italic "Italique"
+  :oblique "Oblique"}
 
  :renderer.attribute.impl.font-weight
  {:description "L'attribut font-weight fait référence à la graisse ou à la
@@ -566,9 +624,10 @@
   :help-idle-click [:div "Cliquez sur un élément pour changer la sélection"]
   :help-edit [:div "Maintenez %1 pour restreindre la direction."]
   :help-type [:div "Entrez votre texte."]
-  :select-element "Sélectionner l'élément"
+  :select-element "Sélectionner un élément"
   :edit "Éditer"
-  :centroid "Centroïde"}
+  :centroid "Centroïde"
+  :handle "poignée"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformer"

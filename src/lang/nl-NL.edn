@@ -120,6 +120,10 @@
   :zoom-focus-selected "Focus op geselecteerd"
   :zoom-fit-selected "Geselecteerd passend maken"
   :zoom-fill-selected "Geselecteerd vullen"
+  :theme-mode "Thema-modus"
+  :dark "Donker"
+  :light "Licht"
+  :system "Systeem"
   :accessibility-filter "Toegankelijkheidsfilter"
   :language "Taal"
   :grid "Raster"
@@ -196,8 +200,8 @@
  {:cut "Knippen"
   :copy "Kopiëren"
   :paste "Plakken"
-  :raise "Naar voren"
-  :lower "Naar achteren"
+  :raise "Verhogen"
+  :lower "Verlagen"
   :raise-top "Naar voorgrond"
   :lower-bottom "Naar achtergrond"
   :animate "Animeren"
@@ -206,10 +210,34 @@
   :duplicate "Dupliceren"
   :delete "Verwijderen"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Animeren"
+  :description "Het SVG <animate> element biedt een manier om een attribuut van
+                een element in de tijd te animeren."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Beweging animeren"
+  :description "Het SVG <animateMotion> element maakt het mogelijk om te
+                definiëren hoe een element zich langs een bewegingspad
+                beweegt."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Transformatie animeren"
+  :description "Het <animateTransform> element animeert een
+                transformatie-attribuut op het doelelement, waardoor animaties
+                translatie, schaling, rotatie en/of scheeftrekken kunnen
+                besturen"}
+
+ :renderer.element.impl.box
+ {:position-handle "positiegreep"
+  :size-handle "groottegreep"}
+
  :renderer.element.impl.shape.circle
  {:label "Cirkel"
   :description "Het SVG <circle> element is een SVG basisvorm, gebruikt om
-                cirkels te tekenen gebaseerd op een middelpunt en straal."}
+                cirkels te tekenen op basis van een middelpunt en een
+                straal."
+  :r-handle "straalgreep"}
 
  :renderer.element.impl.shape.image
  {:label "Afbeelding"
@@ -220,19 +248,26 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellips"
   :description "Het <ellipse> element is een SVG basisvorm, gebruikt om
-                ellipsen te maken gebaseerd op een middelpunt en zowel hun x als
-                y straal."}
+                ellipsen te maken op basis van een middelpuntcoördinaat en zowel
+                hun x- als y-straal."
+  :rx-handle "x-straalgreep"
+  :ry-handle "y-straalgreep"}
 
  :renderer.element.impl.shape.line
  {:label "Lijn"
   :description "Het <line> element is een SVG basisvorm gebruikt om een lijn te
-                maken die twee punten verbindt."}
+                maken die twee punten verbindt."
+  :starting-point "startpunt"
+  :ending-point "eindpunt"}
 
  :renderer.element.impl.shape.path
  {:label "Pad"
   :description "Het SVG <path> element is het generieke element om een vorm te
                 definiëren. Alle basisvormen kunnen gemaakt worden met een path
                 element."}
+
+ :renderer.element.impl.shape.poly
+ {:point "punt"}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygoon"
@@ -259,22 +294,29 @@
   :seed "Een gegeven seed zal altijd dezelfde blob produceren."
   :extra-points "Het werkelijke aantal punten zal `3 + extraPoints` zijn."
   :randomness "Vergroot de hoeveelheid variatie in puntpositie."
-  :size "De grootte van de begrenzingsbox."
+  :size "De grootte van het begrenzingskader."
   :description "Vector gebaseerde blob."
-  :generate-random-seed "Genereer willekeurige seed"}
+  :generate-random-seed "Genereer willekeurige seed"
+  :size-handle "groottegreep"}
 
  :renderer.element.impl.custom.brush
  {:label "Penseel"
   :points "Invoerpunten opgenomen van de muisbeweging van de gebruiker."
   :size "De basisgrootte (diameter) van de streek."
   :thinning "Het effect van druk op de grootte van de streek."
-  :smoothing "Hoeveel de randen van de streek verzacht moeten worden."
-  :stream-line "Hoeveel de streek gestroomlijnd moet worden."
-  :description "Teken drukgevoelige vrijhand lijnen met perfect-freehand."}
+  :smoothing "Hoe veel de randen van de lijn verzacht moeten worden."
+  :stream-line "Hoe veel de lijn gestroomlijnd moet worden."
+  :description "Teken drukkevoelige vrijhandlijnen met perfect-freehand."
+  :brush-point "penseel punt"}
 
  :renderer.element.impl.container.canvas
  {:label "Canvas"
   :description "Het canvas is de hoofd-SVG container die alle elementen bevat."}
+
+ :renderer.element.impl.container.group
+ {:label "Groep"
+  :description "Het <g> SVG-element is een container die wordt gebruikt om
+                andere SVG-elementen te groeperen."}
 
  :renderer.element.impl.container.svg
  {:description "Het svg element is een container die een nieuw
@@ -435,7 +477,8 @@
  {:label "Afbeelding"}
 
  :renderer.tool.impl.element.core
- {:help "Klik en sleep om een element te maken."}
+ {:help "Klik en sleep om een element te maken."
+  :edge "rand"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Klik om meer punten toe te voegen."
@@ -537,7 +580,24 @@
  {:description "Het font-size attribuut verwijst naar de grootte van het
                 lettertype van baseline tot baseline wanneer meerdere regels
                 tekst vast ingesteld zijn in een meerregelige lay-out
-                omgeving."}
+                omgeving."
+  :xx-small "XX-Klein"
+  :x-small "X-Klein"
+  :small "Klein"
+  :medium "Middel"
+  :large "Groot"
+  :x-large "X-Groot"
+  :xx-large "XX-Groot"
+  :xxx-large "XXX-Groot"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Het font-size attribuut verwijst naar de grootte van het
+                lettertype van baseline tot baseline wanneer meerdere regels
+                tekst vast ingesteld zijn in een meerregelige lay-out
+                omgeving."
+  :normal "Normaal"
+  :italic "Cursief"
+  :oblique "Schuin"}
 
  :renderer.attribute.impl.font-weight
  {:description "Het font-weight attribuut verwijst naar de dikte of lichtheid
@@ -571,9 +631,10 @@
   :help-idle-click [:div "Klik op een element om selectie te wijzigen"]
   :help-edit [:div "Houd %1 ingedrukt om richting te beperken."]
   :help-type [:div "Voer uw tekst in."]
-  :select-element "Element selecteren"
+  :select-element "Selecteer element"
   :edit "Bewerken"
-  :centroid "Middelpunt"}
+  :centroid "Zwaartepunt"
+  :handle "handvat"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformeren"

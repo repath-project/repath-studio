@@ -120,6 +120,10 @@
   :zoom-focus-selected "Focalizza selezionato"
   :zoom-fit-selected "Adatta selezionato"
   :zoom-fill-selected "Riempi selezionato"
+  :theme-mode "Modalità tema"
+  :dark "Scuro"
+  :light "Chiaro"
+  :system "Sistema"
   :accessibility-filter "Filtro accessibilità"
   :language "Lingua"
   :grid "Griglia"
@@ -196,20 +200,42 @@
  {:cut "Taglia"
   :copy "Copia"
   :paste "Incolla"
-  :raise "Porta avanti"
-  :lower "Porta dietro"
+  :raise "Alza"
+  :lower "Abbassa"
   :raise-top "Porta in primo piano"
-  :lower-bottom "Porta in fondo"
+  :lower-bottom "Porta in secondo piano"
   :animate "Anima"
   :animate-transform "Anima trasformazione"
   :animate-motion "Anima movimento"
   :duplicate "Duplica"
   :delete "Elimina"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Anima"
+  :description "L'elemento SVG <animate> fornisce un modo per animare un
+                attributo di un elemento nel tempo."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Anima movimento"
+  :description "L'elemento SVG <animateMotion> consente di definire come un
+                elemento si muove lungo un percorso di movimento."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Anima trasformazione"
+  :description "L'elemento <animateTransform> anima un attributo di
+                trasformazione sul suo elemento di destinazione, consentendo
+                così alle animazioni di controllare traslazione,
+                ridimensionamento, rotazione e/o inclinazione"}
+
+ :renderer.element.impl.box
+ {:position-handle "maniglia di posizione"
+  :size-handle "maniglia di dimensione"}
+
  :renderer.element.impl.shape.circle
  {:label "Cerchio"
   :description "L'elemento SVG <circle> è una forma SVG di base, utilizzata per
-                disegnare cerchi basati su un punto centrale e un raggio."}
+                disegnare cerchi basati su un punto centrale e un raggio."
+  :r-handle "maniglia di raggio"}
 
  :renderer.element.impl.shape.image
  {:label "Immagine"
@@ -220,19 +246,26 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellisse"
   :description "L'elemento <ellipse> è una forma SVG di base, utilizzata per
-                creare ellissi basate su coordinate centrali e sui raggi x e
-                y."}
+                creare ellissi basate su una coordinata centrale e sia sul
+                raggio x che y."
+  :rx-handle "maniglia di raggio x"
+  :ry-handle "maniglia di raggio y"}
 
  :renderer.element.impl.shape.line
  {:label "Linea"
   :description "L'elemento <line> è una forma SVG di base utilizzata per creare
-                una linea che collega due punti."}
+                una linea che collega due punti."
+  :starting-point "punto iniziale"
+  :ending-point "punto finale"}
 
  :renderer.element.impl.shape.path
  {:label "Tracciato"
   :description "L'elemento SVG <path> è l'elemento generico per definire una
                 forma. Tutte le forme di base possono essere create con un
                 elemento path."}
+
+ :renderer.element.impl.shape.poly
+ {:point "punto"}
 
  :renderer.element.impl.shape.polygon
  {:label "Poligono"
@@ -259,9 +292,10 @@
   :seed "Un dato seed produrrà sempre lo stesso blob."
   :extra-points "Il numero effettivo di punti sarà `3 + extraPoints`."
   :randomness "Aumenta la quantità di variazione nella posizione dei punti."
-  :size "La dimensione del rettangolo di delimitazione."
+  :size "La dimensione del riquadro di delimitazione."
   :description "Blob basato su vettori."
-  :generate-random-seed "Genera seed casuale"}
+  :generate-random-seed "Genera seed casuale"
+  :size-handle "maniglia di dimensione"}
 
  :renderer.element.impl.custom.brush
  {:label "Pennello"
@@ -271,12 +305,18 @@
   :smoothing "Quanto ammorbidire i bordi del tratto."
   :stream-line "Quanto fluidificare il tratto."
   :description "Disegna linee a mano libera sensibili alla pressione
-                utilizzando perfect-freehand."}
+                utilizzando perfect-freehand."
+  :brush-point "punto pennello"}
 
  :renderer.element.impl.container.canvas
  {:label "Tela"
   :description "La tela è il contenitore SVG principale che ospita tutti gli
                 elementi."}
+
+ :renderer.element.impl.container.group
+ {:label "Gruppo"
+  :description "L'elemento SVG <g> è un contenitore usato per raggruppare altri
+                elementi SVG."}
 
  :renderer.element.impl.container.svg
  {:description "L'elemento svg è un contenitore che definisce un nuovo sistema
@@ -434,7 +474,8 @@
  {:label "Immagine"}
 
  :renderer.tool.impl.element.core
- {:help "Clicca e trascina per creare un elemento."}
+ {:help "Clicca e trascina per creare un elemento."
+  :edge "bordo"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Clicca per aggiungere più punti."
@@ -536,7 +577,24 @@
  {:description "L'attributo font-size si riferisce alla dimensione del font
                 dalla linea di base alla linea di base quando più righe di
                 testo sono impostate solide in un ambiente di layout
-                multilinea."}
+                multilinea."
+  :xx-small "XX-Piccolo"
+  :x-small "X-Piccolo"
+  :small "Piccolo"
+  :medium "Medio"
+  :large "Grande"
+  :x-large "X-Grande"
+  :xx-large "XX-Grande"
+  :xxx-large "XXX-Grande"}
+
+ :renderer.attribute.impl.font-style
+ {:description "L'attributo font-size si riferisce alla dimensione del font
+                dalla linea di base alla linea di base quando più righe di
+                testo sono impostate solide in un ambiente di layout
+                multilinea."
+  :normal "Normale"
+  :italic "Corsivo"
+  :oblique "Obliquo"}
 
  :renderer.attribute.impl.font-weight
  {:description "L'attributo font-weight si riferisce al grassetto o alla
@@ -572,7 +630,8 @@
   :help-type [:div "Inserisci il tuo testo."]
   :select-element "Seleziona elemento"
   :edit "Modifica"
-  :centroid "Centroide"}
+  :centroid "Centroide"
+  :handle "maniglia"}
 
  :renderer.tool.impl.base.transform
  {:label "Trasforma"

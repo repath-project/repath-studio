@@ -1,5 +1,8 @@
 (ns renderer.tool.db
-  (:require [renderer.tool.hierarchy :as tool.hierarchy]))
+  (:require
+   [renderer.element.db :refer [ElementId]]
+   [renderer.i18n.db :refer [Translation]]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (defn tool?
   [tool]
@@ -59,12 +62,12 @@
 (def Handle
   [:map {:closed true}
    [:id HandleId]
-   [:label {:optional true} string?]
+   [:label {:optional true} Translation]
    [:action HandleAction]
    [:type [:= :handle]]
-   [:cursor {:optional true} string?]
+   [:cursor {:optional true} Cursor]
    [:x {:optional true} number?]
    [:y {:optional true} number?]
    [:size {:optional true} number?]
    [:stroke-width {:optional true} number?]
-   [:element-id {:optional true} uuid?]])
+   [:element-id {:optional true} ElementId]])

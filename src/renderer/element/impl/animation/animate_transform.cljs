@@ -2,20 +2,19 @@
   "https://svgwg.org/specs/animations/#AnimateTransformElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateTransform"
   (:require
-   [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
 (derive :animateTransform ::element.hierarchy/animation)
 
 (defmethod element.hierarchy/properties :animateTransform
   []
   {:icon "animation"
-   :label (t [::label "Animate Transform"])
-   :description (t [::description
-                    "The <animateTransform> element animates a
-                     transformation attribute on its target element, thereby
-                     allowing animations to control translation, scaling,
-                     rotation, and/or skewing"])
+   :label [::label "Animate Transform"]
+   :description [::description
+                 "The <animateTransform> element animates a
+                  transformation attribute on its target element, thereby
+                  allowing animations to control translation, scaling,
+                  rotation, and/or skewing"]
    :attrs [:type
            :from
            :to

@@ -5,88 +5,88 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
+   [renderer.i18n.views :as i18n.views]
    [renderer.toolbar.views :as toolbar.views]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
 (defn index-actions
   [disabled]
-  [{:label (t [::bring-front "Bring to front"])
+  [{:label [::bring-front "Bring to front"]
     :icon "bring-front"
     :action [::element.events/raise-to-top]
     :disabled disabled}
-   {:label (t [::send-back "Send to back"])
+   {:label [::send-back "Send to back"]
     :icon "send-back"
     :action [::element.events/lower-to-bottom]
     :disabled disabled}
-   {:label (t [::bring-forward "Bring forward"])
+   {:label [::bring-forward "Bring forward"]
     :icon "bring-forward"
     :action [::element.events/raise]
     :disabled disabled}
-   {:label (t [::send-backward "Send backward"])
+   {:label [::send-backward "Send backward"]
     :icon "send-backward"
     :action [::element.events/lower]
     :disabled disabled}])
 
 #_(defn group-actions
     [disabled]
-    [{:label (t [::group "Group"])
+    [{:label [::group "Group"]
       :icon "group"
       :disabled disabled
       :action [::element.events/group]}
-     {:label (t [::ungroup "Ungroup"])
+     {:label [::ungroup "Ungroup"]
       :icon "ungroup"
       :disabled disabled
       :action [::element.events/ungroup]}])
 
 (defn alignment-actions
   [disabled]
-  [{:label (t [::align-left "Align left"])
+  [{:label [::align-left "Align left"]
     :icon "objects-align-left"
     :disabled disabled
     :action [::element.events/align :left]}
-   {:label (t [::align-center-hor "Align center horizontally"])
+   {:label [::align-center-hor "Align center horizontally"]
     :disabled disabled
     :icon "objects-align-center-horizontal"
     :action [::element.events/align :center-horizontal]}
-   {:label (t [::align-right "Align right"])
+   {:label [::align-right "Align right"]
     :icon "objects-align-right"
     :disabled disabled
     :action [::element.events/align :right]}
    {:type :divider}
-   {:label (t [::align-top "Align top"])
+   {:label [::align-top "Align top"]
     :icon "objects-align-top"
     :disabled disabled
     :action [::element.events/align :top]}
-   {:label (t [::align-center-ver "Align center vertically"])
+   {:label [::align-center-ver "Align center vertically"]
     :icon "objects-align-center-vertical"
     :disabled disabled
     :action [::element.events/align :center-vertical]}
-   {:label (t [::align-bottom "Align bottom"])
+   {:label [::align-bottom "Align bottom"]
     :icon "objects-align-bottom"
     :disabled disabled
     :action [::element.events/align :bottom]}])
 
 (defn boolean-actions
   [disabled]
-  [{:label (t [::unite "Unite"])
+  [{:label [::unite "Unite"]
     :icon "unite"
     :disabled disabled
     :action [::element.events/boolean-operation :unite]}
-   {:label (t [::intersect "Intersect"])
+   {:label [::intersect "Intersect"]
     :icon "intersect"
     :disabled disabled
     :action [::element.events/boolean-operation :intersect]}
-   {:label (t [::subtract "Subtract"])
+   {:label [::subtract "Subtract"]
     :icon "subtract"
     :disabled disabled
     :action [::element.events/boolean-operation :subtract]}
-   {:label (t [::exclude "Exclude"])
+   {:label [::exclude "Exclude"]
     :icon "exclude"
     :disabled disabled
     :action [::element.events/boolean-operation :exclude]}
-   {:label (t [::divide "Divide"])
+   {:label [::divide "Divide"]
     :icon "divide"
     :disabled disabled
     :action [::element.events/boolean-operation :divide]}])
@@ -129,7 +129,7 @@
    [:> DropdownMenu/Trigger
     {:as-child true}
     [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
-     {:aria-label "More object actions"}
+     {:aria-label (i18n.views/t [::more-actions "More object actions"])}
      [views/icon "ellipsis-h"]]]
    [:> DropdownMenu/Portal
     (->> (element.views/context-menu)
