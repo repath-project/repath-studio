@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.11 (2025-11-21)
+
+**Added**
+
+- Language registry [#102](https://github.com/repath-studio/repath-studio/pull/102)
+- Accessibility filter registry [#100](https://github.com/repath-studio/repath-studio/pull/100)
+- Mobile enhancements [#95](https://github.com/repath-studio/repath-studio/pull/95)
+- Menubar indicator on alt down and open menu on shortcut
+- History tree legend
+- Italian, Dutch, Swedish translations
+- Loading icon placeholder
+- Save handling on unsupported browsers
+- Missing translations
+
+**Removed**
+
+- FPS indicator from debug info
+
+**Changed**
+
+- Set default theme to system
+- Hide snap indicator on select mode
+- Enhance popover info styles
+
+**Fixed**
+
+- Locked ratio when creating rect or svg elements
+- Protanopia filter values
+- Scaling elements with no bbox
+
 ## 0.4.10 (2025-10-19)
 
 **Added**
