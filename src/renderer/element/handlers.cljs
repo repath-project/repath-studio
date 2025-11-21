@@ -9,8 +9,6 @@
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
-   [renderer.app.events :as-alias app.events]
-   [renderer.app.handlers :as app.handlers]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.db :refer [BBox BooleanOperation PathManipulation Vec2]]
    [renderer.element.db
