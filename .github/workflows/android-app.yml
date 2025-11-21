@@ -53,6 +53,20 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
+      - name: Install packages
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
       - name: Build android app
         env:
             KEYSTOREALIAS_PASS: ${{ secrets.ANDROID_KEYSTOREALIAS_PASS }}
@@ -67,9 +81,7 @@ jobs:
                                   --keystorealias $KEYSTOREALIAS \
                                   --keystorealiaspass "$KEYSTOREALIAS_PASS" \
                                   --androidreleasetype APK
-
-      - name: Move apk to root
-        run: mv android/app/build/outputs/apk/release/app-release-signed.apk repath-studio-android.apk
+            mv android/app/build/outputs/apk/release/app-release-signed.apk repath-studio-android.apk
 
       - name: Upload android apk to release
         uses: actions/upload-artifact@v5
