@@ -55,6 +55,8 @@
 
 (def valid-filter? (m/validator A11yFilter))
 
+(def explain-filter (m/explainer A11yFilter))
+
 (def default
   [{:id :blur
     :tag :feGaussianBlur

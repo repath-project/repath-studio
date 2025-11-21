@@ -702,15 +702,6 @@
                             (overlapping-svg db el-bbox)
                             (root db)))))))
 
-(m/=> toast-invalid-element [:-> App any? App])
-(defn toast-invalid-element
-  [db el]
-  (let [explanation (-> el element.db/explain m.error/humanize str)]
-    (app.handlers/add-fx db [::app.events/toast
-                             :error
-                             "Invalid element"
-                             {:description explanation}])))
-
 (m/=> create [:-> App map? App])
 (defn create
   [db el]
@@ -727,7 +718,9 @@
                                   (create (assoc %2 :parent id)))
                                db child-els))]
     (if-not (element.db/valid? new-el)
-      (toast-invalid-element db new-el)
+      (throw (ex-info (str "Invalid element: "
+                           (m.error/humanize (element.db/explain el)))
+                      {:element new-el}))
       (let [is-translated (or (utils.element/svg? new-el)
                               (utils.element/root? new-el)
                               (:parent el))]
