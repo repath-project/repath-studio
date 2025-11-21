@@ -96,4 +96,4 @@ jobs:
           packageName: studio.repath.app
           releaseFiles: builds/repath-studio-android.apk
           track: internal
-          status: inProgress
+          status: draft
