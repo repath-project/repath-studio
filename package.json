@@ -125,7 +125,7 @@
     "constants": "0.0.2",
     "create-react-class": "15.7.0",
     "doc-link-checker-cli": "1.0.4",
-    "electron": "39.2.2",
+    "electron": "39.2.3",
     "electron-builder": "26.0.12",
     "electron-builder-notarize": "1.5.2",
     "events": "3.3.0",
@@ -149,7 +149,7 @@
     "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
     "process": "0.11.10",
-    "puppeteer": "24.30.0",
+    "puppeteer": "24.31.0",
     "react": "19.2.0",
     "react-d3-tree": "3.6.6",
     "react-dom": "19.2.0",
@@ -172,7 +172,7 @@
   },
   "dependencies": {
     "@electron/devtron": "2.1.1",
-    "@sentry/electron": "7.2.0",
+    "@sentry/electron": "7.3.0",
     "electron-log": "5.4.3",
     "electron-updater": "6.6.2",
     "electron-window-state": "5.0.3"
