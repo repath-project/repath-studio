@@ -94,6 +94,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
           packageName: studio.repath.app
-          releaseFiles: builds/repath-studio-android.apk
+          releaseFiles: repath-studio-android.apk
           track: internal
           status: draft
