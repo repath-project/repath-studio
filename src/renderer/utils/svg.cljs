@@ -147,7 +147,6 @@
                :shape-rendering "crispEdges"
                :stroke-width stroke-width
                :fill "transparent"}]
-
     [:g {:style {:pointer-events "none"}}
      [:rect (merge attrs {:stroke "var(--accent)"})]
      (when dashed?

@@ -74,7 +74,6 @@
   "Creates a circle."
   ([[cx cy] r]
    (circle [cx cy] r nil))
-
   ([[cx cy] r attrs]
    (create {:tag :circle
             :attrs (merge {:cx cx
@@ -85,7 +84,6 @@
   "Creates a rectangle."
   ([[x y] width height]
    (rect [x y] width height nil))
-
   ([[x y] width height attrs]
    (create {:tag :rect
             :attrs (merge {:x x

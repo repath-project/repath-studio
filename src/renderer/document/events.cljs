@@ -246,7 +246,6 @@
      (if-let [open-id (some->> (:path document)
                                (document.handlers/search-by-path db))]
        {:db (document.handlers/set-active db open-id)}
-
        (if-let [file-handle (:file-handle document)]
          {::document.effects/query-file-handle
           {:file-handle file-handle

@@ -22,7 +22,6 @@
                          (-> (a11y.db/explain-filter a11y-filter)
                              (m.error/humanize)))
                     {:a11y-filter a11y-filter}))
-
     (-> db
         (deregister-filter (:id a11y-filter))
         (update :a11y-filters conj a11y-filter))))

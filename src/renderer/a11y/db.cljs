@@ -63,15 +63,12 @@
     :label [::blur "blur"]
     :attrs {:in "SourceGraphic"
             :stdDeviation "1"}}
-
    {:id :blur-x2
     :tag :feGaussianBlur
     :label [::blur-x2 "blur-x2"]
     :attrs {:in "SourceGraphic"
             :stdDeviation "2"}}
-
    ;; https://github.com/hail2u/color-blindness-emulation
-
    {:id :protanopia
     :tag :feColorMatrix
     :label [::protanopia "protanopia"]
@@ -81,7 +78,6 @@
                      0.558, 0.442, 0, 0, 0
                      0, 0.242, 0.758, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :protanomaly
     :tag :feColorMatrix
     :label [::protanomaly "protanomaly"]
@@ -91,7 +87,6 @@
                      0.333, 0.667, 0, 0, 0
                      0, 0.125, 0.875, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :deuteranopia
     :tag :feColorMatrix
     :label [::deuteranopia "deuteranopia"]
@@ -101,7 +96,6 @@
                      0.7, 0.3, 0, 0, 0
                      0, 0.3, 0.7, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :deuteranomaly
     :tag :feColorMatrix
     :label [::deuteranomaly "deuteranomaly"]
@@ -111,7 +105,6 @@
                      0.258, 0.742, 0, 0, 0
                      0, 0.142, 0.858, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :tritanopia
     :tag :feColorMatrix
     :label [::tritanopia "tritanopia"]
@@ -121,7 +114,6 @@
                      0, 0.433, 0.567, 0, 0
                      0, 0.475, 0.525, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :tritanomaly
     :tag :feColorMatrix
     :label [::tritanomaly "tritanomaly"]
@@ -131,7 +123,6 @@
                      0, 0.733, 0.267, 0, 0
                      0, 0.183, 0.817, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :achromatopsia
     :tag :feColorMatrix
     :label [::tritanomaly "tritanomaly"]
@@ -141,7 +132,6 @@
                      0.299, 0.587, 0.114, 0, 0
                      0.299, 0.587, 0.114, 0, 0
                      0, 0, 0, 1, 0"}}
-
    {:id :achromatomaly
     :tag :feColorMatrix
     :label [::achromatopsia "achromatopsia"]

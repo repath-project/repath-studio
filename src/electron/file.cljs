@@ -93,5 +93,4 @@
                 (if success
                   (res)
                   (rej error)))))
-
        (.loadURL window (str "data:text/html;charset=utf-8," content))))))
